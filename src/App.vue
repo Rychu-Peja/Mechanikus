@@ -1,31 +1,25 @@
 <script lang="ts">
-import NavBar from './components/NavBar.vue'
-import SideBar from './components/SideBar.vue'
+import NavBar from "./components/NavBar.vue";
+import SideBar from "./components/SideBar.vue";
+import LoginLayout from "./views/LoginLayout.vue";
+
 
 export default {
   components: {
     NavBar,
-    SideBar
-  }
-}
+    SideBar,
+    LoginLayout
+  },
+};
 </script>
 
 <template>
   <div id="app">
-    <NavBar />
-    <SideBar />
-    <main>
-     
-    </main>
+   <router-view />
+    <main></main>
   </div>
 </template>
 
-
-<style scoped>
-
-</style>
-
-
-
+<style scoped></style>
 
 <!-- TEST COMMITA-->
