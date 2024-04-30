@@ -31,35 +31,48 @@
       </div>
     </div>
   </nav>
-  <div class="sidebar">
-    <h2 class="sidebar-title">Usterka</h2>
-    <div class="sidebar-content">
-      <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="option1">
-        <label class="form-check-label" for="option1">Opony</label>
+  
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3">
+      <div class="sidebar">
+        <h2 class="sidebar-title">Usterka</h2>
+        <div class="sidebar-content">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="option1">
+            <label class="form-check-label" for="option1">Opony</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="option2">
+            <label class="form-check-label" for="option2">Silnik</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="option3">
+            <label class="form-check-label" for="option3">Elektryka</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="option4">
+            <label class="form-check-label" for="option4">Inne</label>
+          </div>
+        </div>
       </div>
-      <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="option2">
-        <label class="form-check-label" for="option2">Silnik</label>
-      </div>
-      <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="option3">
-        <label class="form-check-label" for="option3">Elektryka</label>
-      </div>
-      <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="option4">
-        <label class="form-check-label" for="option4">Inne</label>
-      </div>
+    </div>
+    <!-- DataServices component -->
+    <div class="services">
+        <DataServices />
     </div>
   </div>
 </template>
 
 
-
-
 <script>
+import DataServices from './DataServices.vue';
 export default {
-  name: "Navbar",
+  name: "HomePage",
+  components:{
+    DataServices
+  }
+
 };
 </script>
 
@@ -93,5 +106,9 @@ export default {
 .form-check-label {
   font-size: 16px;
   color: #6c757d;
+}
+.services > * {
+  flex: 1;
+  margin: 0 auto;
 }
 </style>

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import NavBar from "./components/NavBar.vue";
+import HomePage from "./components/HomePage.vue";
 import SideBar from "./components/SideBar.vue";
 import Login from "./components/Login.vue";
 import LoginLayout from "./views/LoginLayout.vue";
@@ -7,16 +7,10 @@ import RegisterLayout from "./views/RegisterLayout.vue"
 
 const routes = [
   {
-    name: "NavBar",
-    component: NavBar,
+    name: "HomePage",
+    component: HomePage,
     path: "/",
   },
-  {
-    name: "SideBar",
-    component: SideBar,
-    path: "/",
-  },
- 
   {
     name: "LoginLayout",
     component: () => LoginLayout,

@@ -1,14 +1,16 @@
 <script lang="ts">
-import NavBar from "./components/NavBar.vue";
+import HomePage from "./components/HomePage.vue";
 import SideBar from "./components/SideBar.vue";
 import LoginLayout from "./views/LoginLayout.vue";
+import DataServices from "./components/DataServices.vue"
 
 
 export default {
   components: {
-    NavBar,
+    HomePage,
     SideBar,
-    LoginLayout
+    LoginLayout,
+    DataServices
   },
 };
 </script>
@@ -16,7 +18,9 @@ export default {
 <template>
   <div id="app">
    <router-view />
-    <main></main>
+   
+    <main>
+    </main>
   </div>
 </template>
 
