@@ -26,8 +26,9 @@
       <div class="navbar-search">
         <input type="text" class="form-control" placeholder="Wyszukaj" />
       </div>
+      <!-- Dodaj przycisk wylogowywania się -->
       <div class="ps-3">
-        <router-link to="/login" class="btn btn-primary">Zaloguj</router-link>
+        <button @click="logout" class="btn btn-danger">Wyloguj</button>
       </div>
     </div>
   </nav>
@@ -64,15 +65,22 @@
   </div>
 </template>
 
-
 <script>
 import DataServices from './DataServices.vue';
 export default {
   name: "HomePage",
   components:{
     DataServices
+  },
+  methods: {
+    // Metoda do wylogowywania użytkownika
+    logout() {
+      // Usuń zmienną loggedIn z localStorage
+      localStorage.removeItem('loggedIn');
+      // Przejdź do strony logowania
+      this.$router.push({ name: "LoginLayout" });
+    }
   }
-
 };
 </script>
 
@@ -112,3 +120,4 @@ export default {
   margin: 0 auto;
 }
 </style>
+  
