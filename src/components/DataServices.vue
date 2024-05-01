@@ -14,30 +14,50 @@
   </div>
 </template>
 
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    name: "Services",
-    data() {
-      return {
-        services: []
-      };
-    },
-    mounted() {
-      this.fetchServices();
-    },
-    methods: {
-      async fetchServices() {
-        try {
-          const response = await axios.get('http://localhost:5500/carservicedb/services');
-          this.services = response.data;
-        } catch (error) {
-          console.error('Błąd pobierania usług:', error);
-        }
+<script>
+import axios from 'axios';
+
+export default {
+  name: "DataServices",
+  data() {
+    return {
+      services: []
+    };
+  },
+  mounted() {
+    this.fetchServices();
+  },
+  methods: {
+    async fetchServices() {
+      try {
+        const response = await axios.get('http://localhost:5500/carservicedb/services');
+        this.services = response.data;
+      } catch (error) {
+        console.error('Błąd pobierania usług:', error);
       }
     }
-  };
-  </script>
-  
+  }
+};
+</script>
+
+<style scoped>
+.container {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.card {
+  /* Dodatkowe style dla kart */
+  margin-bottom: 20px;
+}
+
+.card-title {
+  /* Dodatkowe style dla tytułu karty */
+  font-size: 20px;
+}
+
+.card-text {
+  /* Dodatkowe style dla tekstu karty */
+  font-size: 16px;
+}
+</style>

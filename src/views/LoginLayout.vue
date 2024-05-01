@@ -42,13 +42,22 @@ export default {
           email: this.email,
           password: this.password
         });
-        // Handle successful login (e.g., redirect to dashboard)
+        // Handle successful login
         console.log("Login successful!");
+        // Ustaw zmienną loggedIn w localStorage jako true, aby oznaczyć zalogowanie użytkownika
+        localStorage.setItem('loggedIn', true);
+        // Przejdź do strony głównej
         this.$router.push({ name: "HomePage" });
       } catch (error) {
         console.error("Login error:", error);
         this.error = "Nieprawidłowy email lub hasło.";
       }
+    }
+  },
+  // Przed wyświetleniem komponentu sprawdź, czy użytkownik jest już zalogowany i przekieruj go do strony głównej
+  created() {
+    if (localStorage.getItem('loggedIn')) {
+      this.$router.push({ name: "HomePage" });
     }
   }
 };
