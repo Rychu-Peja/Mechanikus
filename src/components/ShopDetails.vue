@@ -3,21 +3,34 @@
     <h2>Shop Details</h2>
     <div v-if="service">
       <div class="card mb-3">
-        <div class="card-body">
-          <h3 class="card-title">Warsztat {{ service.name }}</h3>
-          <h4 class="card-subtitle mb-2 text-muted">O nas</h4>
-          <p class="card-text">{{ service.description }}</p>
-          <h4 class="card-subtitle mb-2 text-muted">Czym się zajmujemy?</h4>
-          <p class="card-text">{{ service.props }}</p>
+        <div class="card-body row">
+          <div class="col-md-8">
+            <h3 class="card-title">Warsztat {{ service.name }}</h3>
+            <h4 class="card-subtitle mb-2 text-muted">O nas</h4>
+            <p class="card-text">{{ service.description }}</p>
+            <h4 class="card-subtitle mb-2 text-muted">Czym się zajmujemy?</h4>
+            <p class="card-text">{{ service.props }}</p>
+          </div>
+          <div class="col-md-4">
+            <div class="d-flex flex-column justify-content-between h-100 pt-2">
+              <h4>Umów się na wizytę</h4>
+              <v-date-picker v-model="date" mode="dateTime" />
+              <button class="btn btn-primary flex-grow-1 mt-auto">Wyślij rezerwację</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+
   
   <script>
   import axios from 'axios';
-  
+  import { ref } from 'vue';
+  const date = ref(new Date());
+
   export default {
     name: "ShopDetails",
     props: ['service'],
