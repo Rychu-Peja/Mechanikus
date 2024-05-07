@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "./components/HomePage.vue";
 import LoginLayout from "./views/LoginLayout.vue";
 import RegisterLayout from "./views/RegisterLayout.vue"
+import ShopDetails from "./components/ShopDetails.vue"
 
 const routes = [
   {
@@ -30,6 +31,12 @@ const routes = [
     meta: {
       requiresGuest: true
     }
+  },
+  {
+    name: "ShopDetails",
+    component:() => ShopDetails,
+    path: "/shopdetails",
+    props: (route) => ({ serviceId: route.query.serviceId })
   }
 ];
 

@@ -1,6 +1,6 @@
 <template>
+  <!-- Navbar -->
   <div>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
         <a class="navbar-brand" href="#">Mechanikus</a>
@@ -33,35 +33,10 @@
         </div>
       </div>
     </nav>
-    
-    <!-- Reszta zawartości strony -->
     <div class="container">
-      <h2>Strona główna</h2>
       <div class="row">
         <!-- Sidebar -->
-        <div class="col-md-3">
-          <div class="sidebar">
-            <h2 class="sidebar-title">Usterka</h2>
-            <div class="sidebar-content">
-              <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="option1">
-                <label class="form-check-label" for="option1">Opony</label>
-              </div>
-              <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="option2">
-                <label class="form-check-label" for="option2">Silnik</label>
-              </div>
-              <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="option3">
-                <label class="form-check-label" for="option3">Elektryka</label>
-              </div>
-              <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="option4">
-                <label class="form-check-label" for="option4">Inne</label>
-              </div>
-            </div>
-          </div>
-        </div>
+        <SideBar />
         <!-- DataServices component -->
         <div class="col-md-9 services">
           <DataServices />
@@ -73,10 +48,13 @@
 
 <script>
 import DataServices from './DataServices.vue';
+import SideBar from './SideBar.vue';
+
 export default {
   name: "HomePage",
   components:{
-    DataServices
+    DataServices,
+    SideBar,
   },
   methods: {
     // Metoda do wylogowywania użytkownika
@@ -85,7 +63,11 @@ export default {
       localStorage.removeItem('loggedIn');
       // Przejdź do strony logowania
       this.$router.push({ name: "LoginLayout" });
-    }
+    },
+    handleShowServiceDetails(service) {
+    // This method will be called when the event is emitted
+    this.selectedService = service;
+  },
   }
 };
 </script>
