@@ -3,7 +3,6 @@ import HomePage from "./components/HomePage.vue";
 import SideBar from "./components/SideBar.vue";
 import LoginLayout from "./views/LoginLayout.vue";
 import DataServices from "./components/DataServices.vue"
-import ShopDetails from "./components/ShopDetails.vue";
 
 
 export default {
@@ -11,8 +10,7 @@ export default {
     HomePage,
     SideBar,
     LoginLayout,
-    DataServices,
-    ShopDetails,
+    DataServices
   },
 };
 </script>
@@ -20,11 +18,10 @@ export default {
 <template>
   <div id="app">
    <router-view />
+   
     <main>
     </main>
   </div>
 </template>
 
 <style scoped></style>
-
-<!-- TEST COMMITA-->

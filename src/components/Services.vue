@@ -36,26 +36,18 @@
     </nav>
     <div class="container">
       <div class="row">
-        <!-- Sidebar -->
-        <SideBar />
-        <!-- DataServices component -->
-        <div class="col-md-9 services">
-          <DataServices />
-        </div>
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import DataServices from './DataServices.vue';
-import SideBar from './SideBar.vue';
 
 export default {
-  name: "HomePage",
+  name: "Services",
   components: {
-    DataServices,
-    SideBar,
+
   },
   methods: {
     logout() {
@@ -72,28 +64,6 @@ export default {
 .container {
   padding-left: 15px;
   padding-right: 15px;
-}
-
-.sidebar {
-  width: 170px;
-  background-color: #f8f9fa;
-  padding: 20px;
-  height: 100vh;
-}
-
-.sidebar-title {
-  margin-bottom: 10px;
-  font-size: 18px;
-  color: #6c757d;
-}
-
-.sidebar-content {
-  margin-top: 10px;
-}
-
-.form-check-label {
-  font-size: 16px;
-  color: #6c757d;
 }
 
 .services {

@@ -3,6 +3,9 @@ import HomePage from "./components/HomePage.vue";
 import LoginLayout from "./views/LoginLayout.vue";
 import RegisterLayout from "./views/RegisterLayout.vue"
 import ShopDetails from "./components/ShopDetails.vue"
+import Reservations from "./components/Reservations.vue"
+import Services from "./components/Services.vue"
+
 
 const routes = [
   {
@@ -37,7 +40,25 @@ const routes = [
     component:() => ShopDetails,
     path: "/shopdetails",
     props: (route) => ({ serviceId: route.query.serviceId })
-  }
+  },
+  {
+    name: "Reservations",
+    component: Reservations,
+    path: "/reservations",
+    // Dodaj meta-informację, że widok wymaga zalogowanego użytkownika
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    name: "Services",
+    component: Services,
+    path: "/services",
+    // Dodaj meta-informację, że widok wymaga zalogowanego użytkownika
+    meta: {
+      requiresAuth: true
+    }
+  },
 ];
 
 const router = createRouter({
