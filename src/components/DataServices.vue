@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="data-services">
     <h2>Usługi</h2>
     <div class="row row-cols-3">
       <div v-for="service in services" :key="service._id" class="col mb-4">
@@ -7,8 +7,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ service.name }}</h5>
             <div class="card-image">
-              <!-- Umieść tutaj obrazek -->
-              <img src="\src\assets\warsztat.jpg" alt="Obrazek usługi" class="card-img-top" />
+              <img src="/src/assets/warsztat.jpg" alt="Obrazek usługi" class="card-img-top" />
             </div>
             <p class="card-text">{{ service.props }}</p>
             <RouterLink :to="{ name: 'ShopDetails', query: { serviceId: service._id } }">
@@ -42,49 +41,25 @@ export default {
       } catch (error) {
         console.error('Błąd pobierania usług:', error);
       }
-    },
-  },
-  showShopDetails(service) {
-    this.$router.push({ name: 'ShopDetails', query: { serviceId: service._id } });
+    }
   }
 };
 </script>
 
 <style scoped>
-.container {
-  width: calc(100% - 170px); /* Całkowita szerokość okna - szerokość sidebar */
-  margin-left: 170px; /* Przesunięcie containera w prawo o szerokość sidebar */
+.data-services {
+  width: 100%;
   padding: 15px;
-}
-
-.card {
-  /* Stała wysokość karty */
-  height: 350px; /* Dostosuj wysokość według potrzeb */
-}
-
-.card-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* Wyśrodkuj elementy wewnątrz karty */
-  height: 100%; /* Ustawienie wysokości elementów ciała karty na pełną wysokość karty */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .card-image img {
-  width: 100%; /* Obrazek wypełnia całą szerokość kontenera */
-  height: auto; /* Zachowuje proporcje obrazu */
-  object-fit: cover; /* Zapewnia, że obrazek wypełnia dostępny obszar */
-}
-
-.card-image {
-  margin-bottom: 10px; /* Miejsce na zdjęcie między tytułem a tekstem */
-}
-
-.card-title {
-  font-size: 20px;
-}
-
-.card-text {
-  font-size: 16px;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
 .btn-blue {

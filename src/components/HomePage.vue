@@ -1,6 +1,6 @@
 <template>
-  <!-- Navbar -->
   <div>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
         <router-link class="navbar-brand" to="/">Mechanikus</router-link>
@@ -18,7 +18,6 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <!-- Zmiana <a> na <router-link> -->
               <router-link class="nav-link" to="/reservations">Rezerwacje</router-link>
             </li>
             <li class="nav-item">
@@ -34,14 +33,17 @@
         </div>
       </div>
     </nav>
-    <div class="container">
-      <div class="row">
-        <!-- Sidebar -->
+
+    <!-- Struktura z SideBar i DataServices -->
+    <div class="main-container">
+      <!-- SideBar -->
+      <div class="sidebar">
         <SideBar />
-        <!-- DataServices component -->
-        <div class="col-md-9 services">
-          <DataServices />
-        </div>
+      </div>
+
+      <!-- DataServices -->
+      <div class="services">
+        <DataServices />
       </div>
     </div>
   </div>
@@ -55,7 +57,7 @@ export default {
   name: "HomePage",
   components: {
     DataServices,
-    SideBar,
+    SideBar
   },
   methods: {
     logout() {
@@ -63,40 +65,33 @@ export default {
       localStorage.removeItem('loggedIn');
       // Przejdź do strony logowania
       this.$router.push({ name: "LoginLayout" });
-    },
+    }
   }
 };
 </script>
 
 <style scoped>
-.container {
-  padding-left: 15px;
-  padding-right: 15px;
+.main-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 15px;
 }
 
 .sidebar {
-  width: 170px;
+  flex: 0 0 180px; /* Ustalona szerokość SideBar */
   background-color: #f8f9fa;
-  padding: 20px;
-  height: 100vh;
-}
-
-.sidebar-title {
-  margin-bottom: 10px;
-  font-size: 18px;
-  color: #6c757d;
-}
-
-.sidebar-content {
-  margin-top: 10px;
-}
-
-.form-check-label {
-  font-size: 16px;
-  color: #6c757d;
+  padding: 15px;
+  box-sizing: border-box;
 }
 
 .services {
-  padding: 20px;
+  flex: 1; /* DataServices wypełnia całą pozostałą szerokość */
+  padding: 15px;
+  margin-left: 15px; /* Odstęp od SideBar */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 </style>

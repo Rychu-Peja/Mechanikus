@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
         <router-link class="navbar-brand" to="/">Mechanikus</router-link>
@@ -24,11 +25,14 @@
             </li>
           </ul>
         </div>
+        <div class="ps-3">
+          <button @click="logout" class="btn btn-danger">Wyloguj</button>
+        </div>
       </div>
     </nav>
 
+    <!-- Sekcja Dodawania i Listy Usług -->
     <div class="container mt-4">
-      <!-- Formularz dodawania nowej usługi -->
       <h2>Dodaj Nową Usługę</h2>
       <form @submit.prevent="addService">
         <div class="mb-3">
@@ -46,7 +50,7 @@
         <button type="submit" class="btn btn-primary">Dodaj Usługę</button>
       </form>
 
-      <!-- Lista dostępnych usług z przyciskiem usuwania -->
+      <!-- Lista Dostępnych Usług -->
       <h2 class="mt-5">Dostępne Usługi</h2>
       <ul>
         <li v-for="service in services" :key="service._id">
@@ -87,11 +91,8 @@ export default {
     },
     async addService() {
       try {
-        // Wykonaj żądanie POST, aby dodać usługę
         const response = await axios.post('http://localhost:5500/carservicedb/services', this.newService);
-        // Dodaj nową usługę do listy
         this.services.push(response.data);
-        // Wyczyść formularz
         this.newService = {
           name: '',
           props: '',
@@ -103,13 +104,17 @@ export default {
     },
     async deleteService(serviceId) {
       try {
-        // Wykonaj żądanie DELETE, aby usunąć usługę
         await axios.delete(`http://localhost:5500/carservicedb/services/${serviceId}`);
-        // Zaktualizuj listę usług, usuwając wybrany element
         this.services = this.services.filter(service => service._id !== serviceId);
       } catch (error) {
         console.error('Błąd usuwania usługi:', error);
       }
+    },
+    logout() {
+      // Usuń zmienną loggedIn z localStorage
+      localStorage.removeItem('loggedIn');
+      // Przejdź do strony logowania
+      this.$router.push({ name: "LoginLayout" });
     }
   }
 };
