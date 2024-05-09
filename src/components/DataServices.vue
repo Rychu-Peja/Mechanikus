@@ -8,7 +8,7 @@
             <h5 class="card-title">{{ service.name }}</h5>
             <div class="card-image">
               <!-- Umieść tutaj obrazek -->
-              <img src="C:\Users\jedzi\Desktop\Mechanikus\src\assets\warsztat.jpg" alt="Obrazek usługi" class="card-img-top" />
+              <img src="\src\assets\warsztat.jpg" alt="Obrazek usługi" class="card-img-top" />
             </div>
             <p class="card-text">{{ service.props }}</p>
             <RouterLink :to="{ name: 'ShopDetails', query: { serviceId: service._id } }">

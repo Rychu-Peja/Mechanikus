@@ -24,12 +24,15 @@
             <label for="confirmPassword" class="form-label">Potwierdź hasło</label>
             <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required />
           </div>
-          <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-primary">Zarejestruj się</button>
-            <router-link to="/login">Masz już konto? Zaloguj się!</router-link>
+          <div class="mb-3">
+            <label for="type" class="form-label">Typ konta</label>
+            <select class="form-control" v-model="type">
+              <option value="0">Zwykły Użytkownik</option>
+              <option value="1">Administrator</option>
+            </select>
           </div>
+          <button type="submit" class="btn btn-primary">Zarejestruj się</button>
         </form>
-        <div v-if="error" class="alert alert-danger mt-3" role="alert">{{ error }}</div>
       </div>
     </div>
   </div>
@@ -39,7 +42,6 @@
 import axios from 'axios';
 
 export default {
-  name: "RegisterLayout",
   data() {
     return {
       name: "",
@@ -47,6 +49,7 @@ export default {
       email: "",
       password: "",
       confirmPassword: "",
+      type: 0, // Domyślnie zwykły użytkownik
       error: "",
     };
   },
@@ -63,8 +66,8 @@ export default {
           lastname: this.lastname,
           email: this.email,
           password: this.password,
+          type: this.type, // Ustaw typ zgodnie z wyborem użytkownika
         });
-        console.log("Registration successful!", response.data);
         
         this.$router.push({ name: "HomePage" });
       } catch (error) {
@@ -72,31 +75,6 @@ export default {
         this.error = "Wystąpił błąd podczas rejestracji.";
       }
     },
-    async loginAfterRegistration() {
-      // Proces logowania po rejestracji
-      try {
-        // Wywołanie procesu logowania
-        await userService.loginUser({
-          email: this.email,
-          password: this.password,
-          
-        });
-        console.log("zalogowano po rejetsracji")
-      } catch (error) {
-        console.error("Login error:", error);
-        throw error; // Przekaż błąd do wywołującego
-      }
-    },
   },
 }
 </script>
-
-<style scoped>
-.register-layout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-}
-</style>

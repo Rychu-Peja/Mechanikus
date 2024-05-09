@@ -8,6 +8,7 @@ import Services from "./components/Services.vue"
 
 
 const routes = [
+  
   {
     name: "HomePage",
     component: HomePage,
@@ -54,11 +55,8 @@ const routes = [
     name: "Services",
     component: Services,
     path: "/services",
-    // Dodaj meta-informację, że widok wymaga zalogowanego użytkownika
-    meta: {
-      requiresAuth: true
+    meta: { requiresAuth: true } // Tylko dla zalogowanych użytkowników
     }
-  },
 ];
 
 const router = createRouter({
