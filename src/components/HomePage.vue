@@ -24,9 +24,16 @@
               <router-link class="nav-link" to="/services">Warsztaty</router-link>
             </li>
           </ul>
-        </div>
-        <div class="navbar-search">
-          <input type="text" class="form-control" placeholder="Wyszukaj" />
+          <!-- Powitanie użytkownika -->
+          <span class="navbar-text ms-auto me-3">Witaj, {{ userName || 'Gościu' }}</span>
+          <!-- Pole wyszukiwania -->
+          <input
+            type="text"
+            class="form-control navbar-search"
+            placeholder="Wyszukaj usługi"
+            v-model="searchQuery"
+            @input="filterServices"
+          />
         </div>
         <div class="ps-3">
           <button @click="logout" class="btn btn-danger">Wyloguj</button>
@@ -34,43 +41,88 @@
       </div>
     </nav>
 
-    <!-- Struktura z SideBar i DataServices -->
     <div class="main-container">
-      <!-- SideBar -->
       <div class="sidebar">
         <SideBar />
       </div>
-
-      <!-- DataServices -->
       <div class="services">
-        <DataServices />
+        <DataServices :services="filteredServices" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 import DataServices from './DataServices.vue';
 import SideBar from './SideBar.vue';
 
 export default {
-  name: "HomePage",
+  name: 'HomePage',
   components: {
     DataServices,
     SideBar
   },
+  data() {
+    return {
+      services: [], // Wszystkie usługi
+      filteredServices: [], // Usługi po filtrze
+      searchQuery: '', // Zapytanie wyszukiwania
+      userName: '' // Imię zalogowanego użytkownika
+    };
+  },
+  async mounted() {
+    await this.fetchServices();
+    await this.fetchLoggedInUser(); // Pobierz dane użytkownika podczas montowania komponentu
+  },
   methods: {
+    async fetchServices() {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get('http://localhost:5500/carservicedb/services', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        this.services = response.data;
+        this.filteredServices = this.services; // Ustaw początkowe wartości
+      } catch (error) {
+        console.error('Błąd pobierania usług:', error);
+      }
+    },
+    async fetchLoggedInUser() {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get('http://localhost:5500/carservicedb/currentUser', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        this.userName = response.data.name;
+      } catch (error) {
+        console.error('Błąd pobierania danych użytkownika:', error);
+      }
+    },
+    filterServices() {
+      const query = this.searchQuery.toLowerCase();
+      this.filteredServices = this.services.filter(service =>
+        service.name.toLowerCase().includes(query)
+      );
+    },
     logout() {
-      // Usuń zmienną loggedIn z localStorage
       localStorage.removeItem('loggedIn');
-      // Przejdź do strony logowania
-      this.$router.push({ name: "LoginLayout" });
+      localStorage.removeItem('authToken');
+      this.$router.push({ name: 'LoginLayout' });
     }
   }
 };
 </script>
 
 <style scoped>
+.navbar-search {
+  width: 200px;
+}
+
+.navbar-text {
+  color: white;
+}
+
 .main-container {
   display: flex;
   flex-direction: row;
@@ -79,16 +131,16 @@ export default {
 }
 
 .sidebar {
-  flex: 0 0 180px; /* Ustalona szerokość SideBar */
+  flex: 0 0 180px;
   background-color: #f8f9fa;
   padding: 15px;
   box-sizing: border-box;
 }
 
 .services {
-  flex: 1; /* DataServices wypełnia całą pozostałą szerokość */
+  flex: 1;
   padding: 15px;
-  margin-left: 15px; /* Odstęp od SideBar */
+  margin-left: 15px;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 8px;

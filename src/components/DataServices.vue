@@ -1,3 +1,4 @@
+<!-- Mechanikus/src/components/DataServices.vue -->
 <template>
   <div class="data-services">
     <h2>Usługi</h2>
@@ -21,26 +22,12 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 export default {
   name: 'DataServices',
-  data() {
-    return {
-      services: []
-    };
-  },
-  mounted() {
-    this.fetchServices();
-  },
-  methods: {
-    async fetchServices() {
-      try {
-        const response = await axios.get('http://localhost:5500/carservicedb/services');
-        this.services = response.data;
-      } catch (error) {
-        console.error('Błąd pobierania usług:', error);
-      }
+  props: {
+    services: {
+      type: Array,
+      required: true
     }
   }
 };

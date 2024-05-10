@@ -37,20 +37,22 @@ export default {
       service: null,
       reservationDate: new Date(),
       reservationDetails: '',
-      userId: '', // Zmienna przechowująca identyfikator użytkownika
+      userId: '',
       userName: '',
       userLastname: '',
     };
   },
-  mounted() {
-    this.fetchServiceDetails();
-    this.fetchLoggedInUser(); // Pobierz dane użytkownika po załadowaniu komponentu
+  async mounted() {
+    await this.fetchServiceDetails();
+    await this.fetchLoggedInUser(); // Pobierz dane użytkownika po załadowaniu komponentu
   },
   methods: {
     async fetchServiceDetails() {
       try {
         const serviceId = this.$route.query.serviceId;
-        const response = await axios.get(`http://localhost:5500/carservicedb/services/${serviceId}`);
+        const response = await axios.get(`http://localhost:5500/carservicedb/services/${serviceId}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+        });
         this.service = response.data;
       } catch (error) {
         console.error('Błąd pobierania usługi:', error);
@@ -58,9 +60,12 @@ export default {
     },
     async fetchLoggedInUser() {
       try {
-        // Zakładając, że serwer zwraca dane zalogowanego użytkownika
-        const response = await axios.get('http://localhost:5500/carservicedb/currentUser');
-        this.userId = response.data._id; // Zakładam, że ID użytkownika to `_id`
+        const response = await axios.get('http://localhost:5500/carservicedb/currentUser', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        this.userId = response.data._id;
+        this.userName = response.data.name;
+        this.userLastname = response.data.lastname;
       } catch (error) {
         console.error('Błąd pobierania danych użytkownika:', error);
       }
@@ -74,13 +79,15 @@ export default {
           serviceName: this.service.name,
           reservationDate: this.reservationDate,
           reservationDetails: this.reservationDetails,
+        }, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
         });
         console.log('Rezerwacja udana:', response.data);
         this.$router.push({ name: 'Reservations' });
       } catch (error) {
-        console.error('Błąd rezerwacji:', error);
+        console.error('Błąd podczas rezerwacji:', error);
       }
-      this.goHome()
+      this.goHome();
     },
     goHome() {
       this.$router.push({ name: 'HomePage' });
@@ -97,14 +104,14 @@ export default {
 
 .btn-return {
   background-color: rgb(0, 110, 255);
-  color: white;
+  color: biały;
   margin-top: 15px;
   margin-bottom: 15px;
 }
 
 .btn-blue {
   background-color: rgb(0, 110, 255);
-  color: white;
+  color: biały;
 }
 
 .v-date-picker, .btn-blue {
