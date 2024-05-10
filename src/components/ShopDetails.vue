@@ -11,6 +11,9 @@
             <h4 class="card-subtitle mb-2 text-muted">Czym się zajmujemy?</h4>
             <p class="card-text">{{ service.props }}</p>
           </div>
+          <div>
+            <textarea v-model="reservationDetails" placeholder="Dodatkowe informacje"></textarea>
+          </div>
           <div class="col-md-4">
             <div class="d-flex flex-column justify-content-between h-100 pt-2">
               <h4>Umów się na wizytę</h4>
@@ -26,7 +29,6 @@
 
 <script>
 import axios from 'axios';
-import { ref } from 'vue';
 
 export default {
   name: 'ShopDetails',
@@ -34,11 +36,15 @@ export default {
     return {
       service: null,
       reservationDate: new Date(),
-      userId: 'YOUR_USER_ID', // Replace with an actual user ID or dynamically retrieve from your app
+      reservationDetails: '',
+      userId: '', // Zmienna przechowująca identyfikator użytkownika
+      userName: '',
+      userLastname: '',
     };
   },
   mounted() {
     this.fetchServiceDetails();
+    this.fetchLoggedInUser(); // Pobierz dane użytkownika po załadowaniu komponentu
   },
   methods: {
     async fetchServiceDetails() {
@@ -50,18 +56,31 @@ export default {
         console.error('Błąd pobierania usługi:', error);
       }
     },
+    async fetchLoggedInUser() {
+      try {
+        // Zakładając, że serwer zwraca dane zalogowanego użytkownika
+        const response = await axios.get('http://localhost:5500/carservicedb/currentUser');
+        this.userId = response.data._id; // Zakładam, że ID użytkownika to `_id`
+      } catch (error) {
+        console.error('Błąd pobierania danych użytkownika:', error);
+      }
+    },
     async makeReservation() {
       try {
         const response = await axios.post('http://localhost:5500/carservicedb/reservations', {
           userId: this.userId,
-          serviceId: this.service._id,
-          date: this.reservationDate,
+          userName: this.userName,
+          userLastname: this.userLastname,
+          serviceName: this.service.name,
+          reservationDate: this.reservationDate,
+          reservationDetails: this.reservationDetails,
         });
         console.log('Rezerwacja udana:', response.data);
         this.$router.push({ name: 'Reservations' });
       } catch (error) {
         console.error('Błąd rezerwacji:', error);
       }
+      this.goHome()
     },
     goHome() {
       this.$router.push({ name: 'HomePage' });
