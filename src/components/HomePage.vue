@@ -91,16 +91,25 @@ export default {
       }
     },
     async fetchLoggedInUser() {
-      try {
-        const token = localStorage.getItem('authToken');
-        const response = await axios.get('http://localhost:5500/carservicedb/currentUser', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        this.userName = response.data.name;
-      } catch (error) {
+    try {
+        const config = {
+        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+        };
+        const user = JSON.parse(localStorage.getItem('user')); // Pobierz zapisanego użytkownika
+        if (user) {
+            this.userName = user.name; // Użyj nazwy z localStorage
+            
+        } else {
+            // Jeśli nie ma zapisanego użytkownika, obsłuż to odpowiednio
+            console.log('Brak zalogowanego użytkownika.');
+            this.userName = 'Gość';
+        }
+    } catch (error) {
         console.error('Błąd pobierania danych użytkownika:', error);
-      }
-    },
+        this.userName = 'Gość';
+    }
+},
+
     filterServices() {
       const query = this.searchQuery.toLowerCase();
       this.filteredServices = this.services.filter(service =>
@@ -108,9 +117,9 @@ export default {
       );
     },
     logout() {
-      localStorage.removeItem('loggedIn');
-      localStorage.removeItem('authToken');
-      this.$router.push({ name: 'LoginLayout' });
+        localStorage.removeItem('loggedIn');
+        localStorage.removeItem('user');
+        this.$router.push({ name: "LoginLayout" });
     }
   }
 };

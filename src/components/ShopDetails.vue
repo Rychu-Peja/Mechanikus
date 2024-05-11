@@ -59,40 +59,44 @@ export default {
       }
     },
     async fetchLoggedInUser() {
-      try {
-        const response = await axios.get('http://localhost:5500/carservicedb/currentUser', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
-        });
-        this.userId = response.data._id;
-        this.userName = response.data.name;
-        this.userLastname = response.data.lastname;
-      } catch (error) {
-        console.error('Błąd pobierania danych użytkownika:', error);
-      }
-    },
-    async makeReservation() {
-      try {
-        const response = await axios.post('http://localhost:5500/carservicedb/reservations', {
-          userId: this.userId,
-          userName: this.userName,
-          userLastname: this.userLastname,
-          serviceName: this.service.name,
-          reservationDate: this.reservationDate,
-          reservationDetails: this.reservationDetails,
-        }, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
-        });
-        console.log('Rezerwacja udana:', response.data);
-        this.$router.push({ name: 'Reservations' });
-      } catch (error) {
-        console.error('Błąd podczas rezerwacji:', error);
-      }
-      this.goHome();
+  const authToken = localStorage.getItem('authToken');
+  if (!authToken) {
+    console.error("Brak dostępnego tokenu autoryzacyjnego.");
+    return;
+  }
+  const response = await axios.get('http://localhost:5500/carservicedb/currentUser', {
+    headers: { Authorization: `Bearer ${authToken}` }
+  });
+  this.userId = response.data._id;
+  this.userName = response.data.name;
+  this.userLastname = response.data.lastname;
+},
+
+async makeReservation() {
+  try {
+    const reservationData = {
+      userId: this.userId,
+      userName: this.userName,
+      userLastname: this.userLastname,
+      serviceName: this.service.name,
+      reservationDate: this.reservationDate,
+      reservationDetails: this.reservationDetails,
+    };
+    const authToken = localStorage.getItem('authToken');
+    const response = await axios.post('http://localhost:5500/carservicedb/reservations', reservationData, {
+      headers: { Authorization: `Bearer ${authToken}` }
+    });
+    console.log('Rezerwacja udana:', response.data);
+    this.$router.push({ name: 'Reservations' });
+  } catch (error) {
+    console.error('Błąd podczas rezerwacji:', error);
+  }
+  this.goHome();
     },
     goHome() {
       this.$router.push({ name: 'HomePage' });
     },
-  },
+  }
 };
 </script>
 

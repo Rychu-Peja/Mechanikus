@@ -37,29 +37,48 @@ export default {
   },
   methods: {
     async login() {
+      console.log('Login method called');
       try {
-        const response = await axios.post('http://localhost:5500/carservicedb/users', {
-          email: this.email,
-          password: this.password
-        });
-        // Handle successful login
-        console.log("Login successful!");
-        // Ustaw zmienną loggedIn w localStorage jako true, aby oznaczyć zalogowanie użytkownika
-        localStorage.setItem('loggedIn', true);
-        // Przejdź do strony głównej
-        this.$router.push({ name: "HomePage" });
+        const config = {
+            headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+          };
+          const response = await axios.post('http://localhost:5500/carservicedb/login', {
+              email: this.email,
+              password: this.password
+          });
+          console.log('response', response);  // Dodaj to dla lepszego debugowania odpowiedzi
+          if (response.data.user) {
+              console.log("Login successful!", response.data.user);
+              localStorage.setItem('loggedIn', true);
+              localStorage.setItem('user', JSON.stringify(response.data.user));
+              localStorage.setItem('userId', response.data.user._id);
+              localStorage.setItem('userName', response.data.user.name);
+              localStorage.setItem('userLastname', response.data.user.lastname);
+              localStorage.setItem('authToken', response.data.token); // Zapamiętaj, aby zapisywać token
+
+              this.$router.push({ name: "HomePage" });
+          } else {
+              this.error = "Nieprawidłowy email lub hasło.";
+          }
+          if (response.data.token) {
+          localStorage.setItem('authToken', response.data.token); // Zapisz token
+        }
       } catch (error) {
-        console.error("Login error:", error);
-        this.error = "Nieprawidłowy email lub hasło.";
+          console.error("Login error:", error);
+          this.error = "Nieprawidłowy email lub hasło.";
       }
+    },
+
+  created() {
+    if (localStorage.getItem('user')) {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.email) {
+            this.$router.push({ name: "HomePage" });
+        }
     }
   },
-  // Przed wyświetleniem komponentu sprawdź, czy użytkownik jest już zalogowany i przekieruj go do strony głównej
-  created() {
-    if (localStorage.getItem('loggedIn')) {
-      this.$router.push({ name: "HomePage" });
-    }
-  }
+
+  },
 };
 </script>
 
