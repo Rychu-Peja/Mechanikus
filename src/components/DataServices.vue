@@ -1,3 +1,4 @@
+<!-- Mechanikus/src/components/DataServices.vue -->
 <template>
   <h2 style="margin-bottom: 25px;">Usługi</h2>
   <div class="row row-cols-3 flex-wrap"> <!-- Dodanie flex-wrap -->
@@ -31,22 +32,10 @@ import Button from 'primevue/button';
 
 export default {
   name: 'DataServices',
-  data() {
-    return {
-      services: []
-    };
-  },
-  mounted() {
-    this.fetchServices();
-  },
-  methods: {
-    async fetchServices() {
-      try {
-        const response = await axios.get('http://localhost:5500/carservicedb/services');
-        this.services = response.data;
-      } catch (error) {
-        console.error('Błąd pobierania usług:', error);
-      }
+  props: {
+    services: {
+      type: Array,
+      required: true
     }
   }
 };

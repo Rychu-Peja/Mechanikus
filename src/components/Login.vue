@@ -27,6 +27,7 @@
           <div class="d-flex justify-content-between">
             <button type="submit" class="btn btn-primary">Zaloguj</button>
           </div>
+          <p v-if="error" class="error">{{ error }}</p>
         </form>
       </div>
     </div>
@@ -34,20 +35,46 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-  name: "Login",
   data() {
     return {
       email: '',
       password: '',
       error: '',
     };
+  },
+  methods: {
+    async login() {
+      try {
+        const response = await axios.post('http://localhost:5500/carservicedb/login', {
+          email: this.email,
+          password: this.password
+        });
+
+        // Przechowaj token w localStorage
+        localStorage.setItem('authToken', response.data.token);
+        // Ustaw zmienną loggedIn w localStorage jako true
+        localStorage.setItem('loggedIn', true);
+        // Przejdź do strony głównej
+        this.$router.push({ name: 'HomePage' });
+      } catch (error) {
+        console.error("Błąd logowania:", error);
+        this.error = "Nieprawidłowy email lub hasło.";
+      }
     }
+  },
+  created() {
+    if (localStorage.getItem('loggedIn')) {
+      this.$router.push({ name: "HomePage" });
+    }
+  }
 };
 </script>
 
 <style scoped>
 .error {
-  color: red;
+  color: czerwony;
 }
 </style>
