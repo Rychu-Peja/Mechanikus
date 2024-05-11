@@ -3,7 +3,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
-        <router-link class="navbar-brand" to="/">Mechanikus</router-link>
+        <router-link class="navbar-brand" icon="pi pi-check" to="/">Mechanikus</router-link>
         <button
           class="navbar-toggler"
           type="button"
@@ -26,10 +26,13 @@
           </ul>
         </div>
         <div class="navbar-search">
-          <input type="text" class="form-control" placeholder="Wyszukaj" />
+          <IconField iconPosition="left">
+            <InputIcon class="pi pi-search" style="color:blue"></InputIcon>
+            <InputText v-model="value1" placeholder="Wyszukaj" />
+          </IconField>
         </div>
         <div class="ps-3">
-          <button @click="logout" class="btn btn-danger">Wyloguj</button>
+          <Button @click="logout" class="btn btn-danger" label="Wyloguj" />
         </div>
       </div>
     </nav>
@@ -52,6 +55,11 @@
 <script>
 import DataServices from './DataServices.vue';
 import SideBar from './SideBar.vue';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import IconField from 'primevue/iconfield';
+import 'primeicons/primeicons.css'
+
 
 export default {
   name: "HomePage",
