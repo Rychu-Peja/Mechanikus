@@ -47,6 +47,10 @@
           <label for="description" class="form-label">Opis</label>
           <textarea class="form-control" v-model="newService.description" required></textarea>
         </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Miasto</label>
+          <textarea class="form-control" v-model="newService.city" required></textarea>
+        </div>
         <button type="submit" class="btn btn-primary">Dodaj Usługę</button>
       </form>
 
@@ -54,7 +58,7 @@
       <h2 class="mt-5">Dostępne Usługi</h2>
       <ul>
         <li v-for="service in services" :key="service._id">
-          {{ service.name }} - {{ service.props }}
+          {{ service.name }} - {{ service.props }} - {{ service.city }}
           <button @click="deleteService(service._id)" class="btn btn-danger ms-2">Usuń</button>
         </li>
       </ul>
@@ -73,7 +77,8 @@ export default {
       newService: {
         name: '',
         props: '',
-        description: ''
+        description: '',
+        city: '',
       }
     };
   },
@@ -91,12 +96,13 @@ export default {
     },
     async addService() {
       try {
-        const response = await axios.post('http://localhost:5500/carservicedb/services', this.newService);
+        const response = await axios.post('http://localhost:5500/carservicedb/addServices', this.newService);
         this.services.push(response.data);
         this.newService = {
           name: '',
           props: '',
-          description: ''
+          description: '',
+          city: '',
         };
       } catch (error) {
         console.error('Błąd dodawania usługi:', error);
@@ -104,7 +110,7 @@ export default {
     },
     async deleteService(serviceId) {
       try {
-        await axios.delete(`http://localhost:5500/carservicedb/services/${serviceId}`);
+        await axios.delete(`http://localhost:5500/carservicedb/deleteServices/${serviceId}`);
         this.services = this.services.filter(service => service._id !== serviceId);
       } catch (error) {
         console.error('Błąd usuwania usługi:', error);
