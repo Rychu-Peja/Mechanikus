@@ -1,6 +1,6 @@
 <template>
-  <!-- Navbar -->
   <div>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
         <router-link class="navbar-brand" to="/">Mechanikus</router-link>
@@ -18,7 +18,6 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <!-- Zmiana <a> na <router-link> -->
               <router-link class="nav-link" to="/reservations">Rezerwacje</router-link>
             </li>
             <li class="nav-item">
@@ -35,25 +34,46 @@
       </div>
     </nav>
     <div class="container">
-      <div class="row">
-
-      </div>
+      <h2>Twoje rezerwacje</h2>
+      <ul class="list-group">
+        <li v-for="reservation in reservations" :key="reservation._id" class="list-group-item">
+          <div class="cardbody">
+          <h3>Serwis: {{ reservation.serviceName }}</h3>
+          <h4>Data: {{ reservation.reservationDate }}</h4>
+          <h4>Zgłoszenie: {{reservation.reservationDetails}}</h4>
+        </div>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 
 export default {
   name: "Reservations",
-  components: {
-
+  data() {
+    return {
+      reservations: []
+    };
+  },
+  mounted() {
+    this.fetchReservations();
   },
   methods: {
+    async fetchReservations() {
+      try {
+        const userId = localStorage.getItem('userId'); 
+        const response = await axios.get(`http://localhost:5500/carservicedb/reservations/${userId}`);
+        this.reservations = response.data;
+      } catch (error) {
+        console.error('Błąd pobierania rezerwacji:', error);
+      }
+    },
     logout() {
-      // Usuń zmienną loggedIn z localStorage
       localStorage.removeItem('loggedIn');
-      // Przejdź do strony logowania
+      localStorage.removeItem('userId');
       this.$router.push({ name: "LoginLayout" });
     },
   }
@@ -64,9 +84,5 @@ export default {
 .container {
   padding-left: 15px;
   padding-right: 15px;
-}
-
-.services {
-  padding: 20px;
 }
 </style>
