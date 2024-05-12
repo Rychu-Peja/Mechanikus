@@ -150,7 +150,7 @@ export default {
 
 .services {
   flex: 1;
-  padding: 15px;
+  padding: 5px;
   margin-left: 15px;
   background-color: #fff;
   border: 1px solid #ccc;

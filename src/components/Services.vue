@@ -53,24 +53,38 @@
         </div>
         <button type="submit" class="btn btn-primary">Dodaj Usługę</button>
       </form>
+    </div>
 
-      <!-- Lista Dostępnych Usług -->
-      <h2 class="mt-5">Dostępne Usługi</h2>
-      <ul>
-        <li v-for="service in services" :key="service._id">
-          {{ service.name }} - {{ service.props }} - {{ service.city }}
-          <button @click="deleteService(service._id)" class="btn btn-danger ms-2">Usuń</button>
-        </li>
-      </ul>
+    <!-- Lista Dostępnych Usług -->
+    <div class="container mt-4">
+      <h2>Dostępne Usługi</h2>
+      <DataTable :value="services" class="mt-4">
+        <Column field="name" header="Nazwa"></Column>
+        <Column field="props" header="Atrybuty"></Column>
+        <Column field="city" header="Miasto"></Column>
+        <Column header="Akcje">
+          <template #body="slotProps">
+            <button class="btn btn-danger ms-2" @click="deleteService(slotProps.data._id)">
+              Usuń
+            </button>
+          </template>
+        </Column>
+      </DataTable>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
 
 export default {
   name: "Services",
+  components: {
+    DataTable,
+    Column
+  },
   data() {
     return {
       services: [],
@@ -78,7 +92,7 @@ export default {
         name: '',
         props: '',
         description: '',
-        city: '',
+        city: ''
       }
     };
   },
@@ -91,35 +105,36 @@ export default {
         const response = await axios.get('http://localhost:5500/carservicedb/services');
         this.services = response.data;
       } catch (error) {
-        console.error('Błąd pobierania usług:', error);
+        console.error('Error fetching services:', error);
       }
     },
     async addService() {
       try {
         const response = await axios.post('http://localhost:5500/carservicedb/addServices', this.newService);
         this.services.push(response.data);
-        this.newService = {
-          name: '',
-          props: '',
-          description: '',
-          city: '',
-        };
+        this.resetServiceForm();
       } catch (error) {
-        console.error('Błąd dodawania usługi:', error);
+        console.error('Error adding service:', error);
       }
+    },
+    resetServiceForm() {
+      this.newService = {
+        name: '',
+        props: '',
+        description: '',
+        city: ''
+      };
     },
     async deleteService(serviceId) {
       try {
         await axios.delete(`http://localhost:5500/carservicedb/deleteServices/${serviceId}`);
         this.services = this.services.filter(service => service._id !== serviceId);
       } catch (error) {
-        console.error('Błąd usuwania usługi:', error);
+        console.error('Error deleting service:', error);
       }
     },
     logout() {
-      // Usuń zmienną loggedIn z localStorage
       localStorage.removeItem('loggedIn');
-      // Przejdź do strony logowania
       this.$router.push({ name: "LoginLayout" });
     }
   }

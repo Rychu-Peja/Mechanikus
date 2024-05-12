@@ -21,7 +21,7 @@
       </div>
     </div>
     <h2 class="sidebar-title" style="margin-top: 30px;">Miasto</h2>
-    <Dropdown v-model="selectedCity" :options="cities" optionLabel="name" placeholder="Wybierz miasto" checkmark :highlightOnSelect="false" class="w-full md:w-14rem" />
+    <Dropdown v-model="selectedCity" :options="cities" optionLabel="name" placeholder="Wybierz miasto" checkmark :highlightOnSelect="false" style="width: 11rem;" />
   </div>
 </template>
 
