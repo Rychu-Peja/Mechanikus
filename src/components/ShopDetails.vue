@@ -9,7 +9,7 @@
             <h4 class="card-subtitle mb-2 text-muted">O nas</h4>
             <p class="card-text">{{ service.description }}</p>
             <h4 class="card-subtitle mb-2 text-muted">Czym się zajmujemy?</h4>
-            <p class="card-text">{{ service.props }}</p>
+            <p class="card-text">{{ service.props.join(', ') }}</p>
           </div>
           <div>
             <textarea v-model="reservationDetails" placeholder="Dodatkowe informacje"></textarea>

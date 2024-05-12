@@ -1,29 +1,29 @@
 <!-- Mechanikus/src/components/DataServices.vue -->
 <template>
-  <h2 style="margin-bottom: 25px;">Usługi</h2>
-  <div class="row row-cols-3 flex-wrap"> <!-- Dodanie flex-wrap -->
-    <div v-for="service in services" :key="service._id" class="col mb-4">
-      <Card style="width: 25rem; overflow: hidden" class="mx-auto mb-3"> <!-- Dodanie klas Bootstrapa -->
-        <template #header>
-          <img alt="warsztat" src="/src/assets/warsztat.jpg" style="max-width: 100%;" />
-        </template>
-        <template #title>{{ service.name }}</template>
-        <template #subtitle>{{ service.props }}</template>
-        <template #content>
-          <p class="m-0"> <!--{{ service.desc }} --> </p>
-        </template>
-        <template #footer>
-          <div class="flex gap-3 mt-1">
+  <div class="data-services">
+    <h2>Usługi</h2>
+    <div class="row">
+      <div v-for="service in services" :key="service._id" class="col mb-4">
+        <Card style="width: 25rem; overflow: hidden" class="mx-auto mb-3">
+          <template #header>
+            <img :src="service.imagePath || '/src/assets/warsztat.jpg'" alt="warsztat" style="max-width: 100%;" />
+          </template>
+          <template #title>{{ service.name }}</template>
+          <!-- Convert array of props to a comma-separated sentence -->
+          <template #subtitle>{{ service.props.join(', ') }}</template>
+          <template #content>
+            <p>{{ service.description }}</p>
+          </template>
+          <template #footer>
             <RouterLink :to="{ name: 'ShopDetails', query: { serviceId: service._id } }">
-              <Button class="btn btn-blue" style="margin-left: 70%;" label="Szczegóły" /> <!-- Ustawienie marginesu auto -->
+              <Button class="btn btn-blue" label="Szczegóły" />
             </RouterLink>
-          </div>
-        </template>
-      </Card>
+          </template>
+        </Card>
+      </div>
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios';
 import Card from 'primevue/card';

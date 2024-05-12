@@ -41,15 +41,20 @@
         </div>
         <div class="mb-3">
           <label for="props" class="form-label">Atrybuty Usługi</label>
-          <input type="text" class="form-control" v-model="newService.props" required />
+          <!-- Convert array of props to a comma-separated sentence for input -->
+          <input type="text" class="form-control" v-model="propsAsString" @input="updateProps" required />
         </div>
         <div class="mb-3">
           <label for="description" class="form-label">Opis</label>
           <textarea class="form-control" v-model="newService.description" required></textarea>
         </div>
         <div class="mb-3">
-          <label for="description" class="form-label">Miasto</label>
-          <textarea class="form-control" v-model="newService.city" required></textarea>
+          <label for="city" class="form-label">Miasto</label>
+          <input type="text" class="form-control" v-model="newService.city" required />
+        </div>
+        <div class="mb-3">
+            <label for="image" class="form-label">Obraz</label>
+            <input type="file" class="form-control" @change="handleFileUpload" />
         </div>
         <button type="submit" class="btn btn-primary">Dodaj Usługę</button>
       </form>
@@ -90,41 +95,74 @@ export default {
       services: [],
       newService: {
         name: '',
-        props: '',
+        props: [],
         description: '',
-        city: ''
-      }
+        city: '',
+        imageFile: null
+      },
+      propsAsString: '',
     };
   },
-  mounted() {
-    this.fetchServices();
+  watch: {
+    'newService.props'(newProps) {
+      this.propsAsString = newProps.join(', ');
+    }
   },
   methods: {
+    handleFileUpload(event) {
+      this.newService.imageFile = event.target.files[0];
+    },
+
+    updateProps(event) {
+      this.newService.props = event.target.value.split(',').map(item => item.trim());
+    },
+
     async fetchServices() {
       try {
         const response = await axios.get('http://localhost:5500/carservicedb/services');
         this.services = response.data;
+        this.services.forEach(service => {
+          service.props = service.props.join(', ');
+        });
       } catch (error) {
         console.error('Error fetching services:', error);
       }
     },
+
     async addService() {
+      const formData = new FormData();
+      formData.append('name', this.newService.name);
+      formData.append('props', JSON.stringify(this.newService.props));
+      formData.append('description', this.newService.description);
+      formData.append('city', this.newService.city);
+      if (this.newService.imageFile) {
+        formData.append('image', this.newService.imageFile);
+      }
+
       try {
-        const response = await axios.post('http://localhost:5500/carservicedb/addServices', this.newService);
+        const response = await axios.post('http://localhost:5500/carservicedb/addServices', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
         this.services.push(response.data);
         this.resetServiceForm();
       } catch (error) {
         console.error('Error adding service:', error);
       }
     },
+
     resetServiceForm() {
       this.newService = {
         name: '',
-        props: '',
+        props: [],
         description: '',
-        city: ''
+        city: '',
+        imageFile: null
       };
+      this.propsAsString = '';
     },
+
     async deleteService(serviceId) {
       try {
         await axios.delete(`http://localhost:5500/carservicedb/deleteServices/${serviceId}`);
@@ -133,10 +171,14 @@ export default {
         console.error('Error deleting service:', error);
       }
     },
+
     logout() {
       localStorage.removeItem('loggedIn');
       this.$router.push({ name: "LoginLayout" });
     }
+  },
+  mounted() {
+    this.fetchServices();
   }
 };
 </script>
