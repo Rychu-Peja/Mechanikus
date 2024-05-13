@@ -21,6 +21,11 @@
               <router-link class="nav-link" to="/reservations">Rezerwacje</router-link>
             </li>
           </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <router-link class="nav-link" to="/services">Warsztaty</router-link>
+            </li>
+          </ul>
           <!-- Powitanie użytkownika -->
           <span class="navbar-text ms-auto me-3">Witaj, {{ userName || 'Gościu' }}</span>
           <!-- Pole wyszukiwania -->

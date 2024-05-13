@@ -3,7 +3,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
-        <router-link class="navbar-brand" to="/">Mechanikus</router-link>
+        <router-link class="navbar-brand" icon="pi pi-check" to="/">Mechanikus</router-link>
         <button
           class="navbar-toggler"
           type="button"
@@ -20,20 +20,27 @@
             <li class="nav-item">
               <router-link class="nav-link" to="/reservations">Rezerwacje</router-link>
             </li>
+          </ul>
+          <ul class="navbar-nav">
             <li class="nav-item">
               <router-link class="nav-link" to="/services">Warsztaty</router-link>
             </li>
           </ul>
-        </div>
-        <div class="navbar-search">
-          <input type="text" class="form-control" placeholder="Wyszukaj" />
+          <!-- Powitanie użytkownika -->
+          <span class="navbar-text ms-auto me-3">Witaj, {{ userName || 'Gościu' }}</span>
+          <!-- Pole wyszukiwania -->
+          <IconField iconPosition="left">
+            <InputIcon class="pi pi-search" style="color:blue"></InputIcon>
+            <InputText v-model="searchQuery" @input="filterServices" placeholder="Wyszukaj usługi" />
+          </IconField>
         </div>
         <div class="ps-3">
-          <button @click="logout" class="btn btn-danger">Wyloguj</button>
+          <Button @click="logout" class="btn btn-danger" label="Wyloguj" />
         </div>
       </div>
     </nav>
-    <div class="container">
+
+    <div class="container" style="margin-top: 15px;">
       <h2>Twoje rezerwacje</h2>
       <ul class="list-group">
         <li v-for="reservation in reservations" :key="reservation._id" class="list-group-item">
