@@ -24,13 +24,13 @@
             <label for="confirmPassword" class="form-label">Potwierdź hasło</label>
             <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required />
           </div>
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="type" class="form-label">Typ konta</label>
             <select class="form-control" v-model="type">
               <option value="0">Zwykły Użytkownik</option>
               <option value="1">Administrator</option>
             </select>
-          </div>
+          </div> -->
           <button type="submit" class="btn btn-primary">Zarejestruj się</button>
         </form>
       </div>

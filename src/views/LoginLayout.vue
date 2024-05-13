@@ -37,37 +37,41 @@ export default {
   },
   methods: {
     async login() {
-      console.log('Login method called');
-      try {
-        const config = {
-            headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
-          };
-          const response = await axios.post('http://localhost:5500/carservicedb/login', {
-              email: this.email,
-              password: this.password
-          });
-          console.log('response', response);  // Dodaj to dla lepszego debugowania odpowiedzi
-          if (response.data.user) {
-              console.log("Login successful!", response.data.user);
-              localStorage.setItem('loggedIn', true);
-              localStorage.setItem('user', JSON.stringify(response.data.user));
-              localStorage.setItem('userId', response.data.user._id);
-              localStorage.setItem('userName', response.data.user.name);
-              localStorage.setItem('userLastname', response.data.user.lastname);
-              localStorage.setItem('authToken', response.data.token); // Zapamiętaj, aby zapisywać token
+  console.log('Login method called');
+  try {
+    const response = await axios.post('http://localhost:5500/carservicedb/login', {
+      email: this.email,
+      password: this.password
+    });
+    console.log('response', response);  // This helps in debugging the response
+    if (response.data.user) {
+      console.log("Login successful!", response.data.user);
+      localStorage.setItem('loggedIn', true);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      localStorage.setItem('userId', response.data.user._id);
+      localStorage.setItem('userName', response.data.user.name);
+      localStorage.setItem('userLastname', response.data.user.lastname);
+      localStorage.setItem('authToken', response.data.token); // Remember to store the token
+      this.determineRedirect(response.data.user.type || response.data.user.__v);  // Correct usage of user type or __v for redirection
 
-              this.$router.push({ name: "HomePage" });
-          } else {
-              this.error = "Nieprawidłowy email lub hasło.";
-          }
-          if (response.data.token) {
-          localStorage.setItem('authToken', response.data.token); // Zapisz token
-        }
-      } catch (error) {
-          console.error("Login error:", error);
-          this.error = "Nieprawidłowy email lub hasło.";
-      }
-    },
+    } else {
+      this.error = "Nieprawidłowy email lub hasło.";
+    }
+    if (response.data.token) {
+      localStorage.setItem('authToken', response.data.token); // Store token if available
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    this.error = "Nieprawidłowy email lub hasło.";
+  }
+},
+determineRedirect(userType) {
+  if (userType === 0) {
+    this.$router.push({ name: 'HomePage' });
+  } else if (userType === 1) {
+    this.$router.push({ name: 'AdminView' });
+  }
+},
 
   created() {
     if (localStorage.getItem('user')) {

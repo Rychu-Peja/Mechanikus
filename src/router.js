@@ -6,6 +6,7 @@ import RegisterLayout from './views/RegisterLayout.vue';
 import ShopDetails from './components/ShopDetails.vue';
 import Reservations from './components/Reservations.vue';
 import Services from './components/Services.vue';
+import AdminView from './components/AdminView.vue';
 
 const routes = [
   {
@@ -45,6 +46,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    name: 'AdminView',
+    component: AdminView,
+    path: '/admin',
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/'
   }
@@ -56,13 +63,22 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !localStorage.getItem('loggedIn')) {
+  const loggedIn = localStorage.getItem('loggedIn');
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  if (to.meta.requiresAuth && !loggedIn) {
     next({ name: 'LoginLayout' });
-  } else if (to.meta.requiresGuest && localStorage.getItem('loggedIn')) {
+  } else if (to.meta.requiresGuest && loggedIn) {
     next({ name: 'HomePage' });
   } else {
-    next();
+    // Check user type or version for protected routes
+    if (to.meta.requiresAdmin && user && user.type !== 1) {
+      next({ name: 'HomePage' });  // Redirect non-admin users
+    } else {
+      next();
+    }
   }
 });
+
 
 export default router;

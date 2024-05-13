@@ -20,9 +20,6 @@
             <li class="nav-item">
               <router-link class="nav-link" to="/reservations">Rezerwacje</router-link>
             </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/services">Warsztaty</router-link>
-            </li>
           </ul>
           <!-- Powitanie użytkownika -->
           <span class="navbar-text ms-auto me-3">Witaj, {{ userName || 'Gościu' }}</span>
@@ -40,7 +37,7 @@
 
     <div class="main-container">
       <div class="sidebar">
-        <SideBar />
+        <SideBar @citySelected="fetchServicesByCity" />
       </div>
       <div class="services">
         <DataServices :services="filteredServices" />
@@ -107,8 +104,20 @@ export default {
     } catch (error) {
         console.error('Błąd pobierania danych użytkownika:', error);
         this.userName = 'Gość';
-    }
-},
+      }
+      
+    },
+    // fetchServicesByCity(city) {
+    // axios.get(`http://localhost:5500/carservicedb/services?city=${city}`)
+    //     .then(response => {
+    //         this.filteredServices = response.data;
+    //     })
+    //     .catch(error => {
+    //         console.error('Error fetching services by city:', error);
+    //         this.filteredServices = [];  // Clear services on error to avoid displaying incorrect data
+    //     });
+    //     },
+
 
     filterServices() {
       const query = this.searchQuery.toLowerCase();

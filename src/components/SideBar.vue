@@ -2,32 +2,21 @@
   <div class="sidebar p-shadow-3">
     <h2 class="sidebar-title">Usterka</h2>
     <div class="sidebar-content space-y-4">
-      <!-- Each checkbox item -->
-      <div class="form-check flex items-center space-x-2">
-        <Checkbox inputId="option1" v-model="checkedOptions" value="Opony" />
-        <label class="form-check-label" for="option1">Opony</label>
-      </div>
-      <div class="form-check flex items-center space-x-2">
-        <Checkbox inputId="option2" v-model="checkedOptions" value="Silnik" />
-        <label class="form-check-label" for="option2">Silnik</label>
-      </div>
-      <div class="form-check flex items-center space-x-2">
-        <Checkbox inputId="option3" v-model="checkedOptions" value="Elektryka" />
-        <label class="form-check-label" for="option3">Elektryka</label>
-      </div>
-      <div class="form-check flex items-center space-x-2">
-        <Checkbox inputId="option4" v-model="checkedOptions" value="Inne" />
-        <label class="form-check-label" for="option4">Inne</label>
+      <!-- Multiple checkboxes for selecting service attributes -->
+      <div class="form-check flex items-center space-x-2" v-for="(option, index) in options" :key="index">
+        <Checkbox :inputId="'option' + index" v-model="checkedOptions" :value="option" />
+        <label :class="form-check-label" :for="'option' + index">{{ option }}</label>
       </div>
     </div>
     <h2 class="sidebar-title" style="margin-top: 30px;">Miasto</h2>
-    <Dropdown v-model="selectedCity" :options="cities" optionLabel="name" placeholder="Wybierz miasto" checkmark :highlightOnSelect="false" style="width: 11rem;" />
+    <Dropdown v-model="selectedCity" :options="cities" optionLabel="name" placeholder="Wybierz miasto" :highlightOnSelect="false" style="width: 11rem;" @change="cityChanged"  />
   </div>
 </template>
 
 <script>
 import Checkbox from 'primevue/checkbox';
 import Dropdown from 'primevue/dropdown';
+import axios from 'axios';
 
 export default {
   name: 'SideBar',
@@ -37,37 +26,40 @@ export default {
   },
   data() {
     return {
-      checkedOptions: []
+      checkedOptions: [],
+      options: ['Opony', 'Silnik', 'Elektryka', 'Inne'],
+      cities: [],
+      selectedCity: null
     };
+  },
+  methods: {
+    fetchCities() {
+      axios.get('http://localhost:5500/carservicedb/cities')
+        .then(response => {
+          this.cities = response.data.map(city => ({ name: city, code: city }));
+        })
+        .catch(error => console.error('Error fetching cities:', error));
+    },
+    cityChanged(city) {
+      this.$emit('citySelected', city.code);
+    },
+  },
+  mounted() {
+    this.fetchCities();
   }
 };
-</script>
-
-<script setup>
-import { ref } from "vue";
-
-const selectedCity = ref();
-const cities = ref([
-    { name: 'Wybierz miasto', code: '' },
-    { name: 'Gdańsk', code: 'GD' },
-    { name: 'Gdynia', code: 'GDY' },
-    { name: 'Sopot', code: 'SOP' },
-    { name: 'Reda', code: 'RD' },
-    { name: 'Żukowo', code: 'ZUK' },
-    { name: 'Wejcherowo', code: 'WEJ' },
-]);
 </script>
 
 <style scoped>
 .sidebar {
   width: 200px;
   background-color: #f8f9fa;
-  height: 100vh; /* Full height of the viewport */
-  position: absolute; /* Positioned absolutely */
-  left: 0; /* Align with the left edge */
-  padding: 20px; /* Adjust padding if required */
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  padding: 20px;
   margin-right: 20px;
-  box-sizing: border-box; /* Ensure padding is included in width */
+  box-sizing: border-box;
 }
 
 .sidebar-title {
