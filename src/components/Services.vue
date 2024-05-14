@@ -41,8 +41,10 @@
         </div>
         <div class="mb-3">
           <label for="props" class="form-label">Atrybuty Usługi</label>
-          <!-- Convert array of props to a comma-separated sentence for input -->
-          <input type="text" class="form-control" v-model="propsAsString" @input="updateProps" required />
+          <div class="card flex justify-content-center">
+            <MultiSelect v-model="newService.props" :options="props" optionLabel="name" optionValue="code" placeholder="Wybierz atrybuty"
+              class="w-full md:w-20rem" required/>
+          </div>
         </div>
         <div class="mb-3">
           <label for="description" class="form-label">Opis</label>
@@ -83,30 +85,35 @@
 import axios from 'axios';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import MultiSelect from 'primevue/multiselect'; // Ensure this import
 
 export default {
   name: "Services",
   components: {
     DataTable,
-    Column
+    Column,
+    MultiSelect,  // Register the component
   },
   data() {
     return {
       services: [],
       newService: {
         name: '',
-        props: [],
+        props: [],  // This will directly bind to MultiSelect
         description: '',
         city: '',
         imageFile: null
       },
-      propsAsString: '',
+      props: [
+        { name: 'Opony', code: 'Opony' },
+        { name: 'Szyby', code: 'Szyby' },
+        { name: 'Silnik', code: 'Silnik' },
+        { name: 'Lakier', code: 'Lakier' },
+        { name: 'Elektryka', code: 'Elektryka' },
+        { name: 'Klimatyzacja', code: 'Klimatyzacja' },
+        { name: 'Wymiana płynów', code: 'Inne' },
+      ]
     };
-  },
-  watch: {
-    'newService.props'(newProps) {
-      this.propsAsString = newProps.join(', ');
-    }
   },
   methods: {
     handleFileUpload(event) {

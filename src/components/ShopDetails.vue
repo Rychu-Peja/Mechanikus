@@ -52,12 +52,15 @@
             <h4 class="card-subtitle mb-2 text-muted">Czym się zajmujemy?</h4>
             <p class="card-text">{{ service.props.join(', ') }}</p>
           </div>
-          <div style="margin-top: 10rem;">
+          <div style="margin-top: 8rem;">
             <h4 class="card-subtitle mb-2 text-muted">Dodatkowe informacje dla warsztatu</h4>
-            <textarea v-model="reservationDetails" placeholder="Dodatkowe informacje"></textarea>
+            <FloatLabel style="margin-top: 25px;">
+              <Textarea v-model="reservationDetails" rows="5" cols="30"> </Textarea>
+              <label>Informacje do rezerwacji </label>
+            </FloatLabel>
           </div>
           <div class="col-md-4">
-            <div class="d-flex flex-column justify-content-between h-100 pt-2">
+            <div class="d-flex flex-column justify-content-between h-100 pt-2" style="margin-top: 15px;">
               <h4>Umów się na wizytę</h4>
               <v-date-picker v-model="reservationDate" mode="dateTime" class="w-100" />
               <button @click="makeReservation" class="btn btn-blue mt-3 w-100">Wyślij rezerwację</button>
@@ -71,6 +74,7 @@
 
 <script>
 import axios from 'axios';
+import Textarea from 'primevue/textarea';
 
 export default {
   name: 'ShopDetails',
@@ -141,6 +145,7 @@ async makeReservation() {
   }
 };
 </script>
+
 
 <style scoped>
 .container {

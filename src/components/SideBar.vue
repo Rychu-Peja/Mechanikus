@@ -2,27 +2,29 @@
   <div class="sidebar p-shadow-3">
     <h2 class="sidebar-title">Usterka</h2>
     <div class="sidebar-content space-y-4">
-      <!-- Multiple checkboxes for selecting service attributes -->
       <div class="form-check flex items-center space-x-2" v-for="(option, index) in options" :key="index">
         <Checkbox :inputId="'option' + index" v-model="checkedOptions" :value="option" />
-        <label :class="form-check-label" :for="'option' + index">{{ option }}</label>
+        <label :for="'option' + index">{{ option }}</label>
       </div>
     </div>
     <h2 class="sidebar-title" style="margin-top: 30px;">Miasto</h2>
-    <Dropdown v-model="selectedCity" :options="cities" optionLabel="name" placeholder="Wybierz miasto" :highlightOnSelect="false" style="width: 11rem;" @change="cityChanged"  />
+    <Dropdown v-model="selectedCity" :options="cities" showClear optionLabel="name" placeholder="Wybierz miasto" :highlightOnSelect="false" style="width: 11rem;" @change="cityChanged" />
+    <Button style="margin-top: 2rem;  width: 11rem;" class="btn btn-blue" label="Filtruj" @click="applyFilters" />
   </div>
 </template>
 
 <script>
 import Checkbox from 'primevue/checkbox';
 import Dropdown from 'primevue/dropdown';
+import Button from 'primevue/button';
 import axios from 'axios';
 
 export default {
   name: 'SideBar',
   components: {
     Checkbox,
-    Dropdown
+    Dropdown,
+    Button
   },
   data() {
     return {
@@ -75,5 +77,9 @@ export default {
 .form-check-label {
   font-size: 16px;
   color: #6c757d;
+}
+.btn-blue {
+  background-color: rgb(0, 110, 255);
+  color: white;
 }
 </style>
