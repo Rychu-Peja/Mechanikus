@@ -44,11 +44,11 @@
       <h2>Twoje rezerwacje</h2>
       <ul class="list-group">
         <li v-for="reservation in reservations" :key="reservation._id" class="list-group-item">
-          <div class="cardbody">
-          <h3>Serwis: {{ reservation.serviceName }}</h3>
-          <h4>Data: {{ reservation.reservationDate }}</h4>
-          <h4>Zgłoszenie: {{reservation.reservationDetails}}</h4>
-        </div>
+          <div class="card-body">
+            <h3>Serwis: {{ reservation.serviceName }}</h3>
+            <h4>Data: {{ formatReservationDate(reservation.reservationDate) }}</h4>
+            <h4>Zgłoszenie: {{ reservation.reservationDetails }}</h4>
+          </div>
         </li>
       </ul>
     </div>
@@ -65,13 +65,10 @@ export default {
       reservations: []
     };
   },
-  mounted() {
-    this.fetchReservations();
-  },
   methods: {
     async fetchReservations() {
       try {
-        const userId = localStorage.getItem('userId'); 
+        const userId = localStorage.getItem('userId');
         const response = await axios.get(`http://localhost:5500/carservicedb/reservations/${userId}`);
         this.reservations = response.data;
       } catch (error) {
@@ -83,6 +80,13 @@ export default {
       localStorage.removeItem('userId');
       this.$router.push({ name: "LoginLayout" });
     },
+    formatReservationDate(date) {
+      const d = new Date(date);
+      return `${d.getFullYear()}-${('0' + (d.getMonth() + 1)).slice(-2)}-${('0' + d.getDate()).slice(-2)} ${('0' + d.getHours()).slice(-2)}:${('0' + d.getMinutes()).slice(-2)}`;
+    }
+  },
+  mounted() {
+    this.fetchReservations();
   }
 };
 </script>
