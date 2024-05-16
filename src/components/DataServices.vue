@@ -1,4 +1,3 @@
-<!-- Mechanikus/src/components/DataServices.vue -->
 <template>
   <div class="data-services">
     <h2>Usługi</h2>
@@ -6,10 +5,9 @@
       <div v-for="service in services" :key="service._id" class="col mb-4">
         <Card style="width: 25rem; overflow: hidden" class="mx-auto mb-3">
           <template #header>
-            <img :src="service.imagePath || '/src/assets/warsztat.jpg'" alt="warsztat" style="max-width: 100%;" />
+            <img :src="getImageUrl(service.imagePath) || '/src/assets/warsztat.jpg'" alt="warsztat" style="max-width: 100%;" />
           </template>
           <template #title>{{ service.name }}</template>
-          <!-- Convert array of props to a comma-separated sentence -->
           <template #subtitle>{{ service.props.join(', ') }}</template>
           <template #content>
             <p>{{ service.description }}</p>
@@ -24,11 +22,10 @@
     </div>
   </div>
 </template>
+
 <script>
-import axios from 'axios';
 import Card from 'primevue/card';
 import Button from 'primevue/button';
-
 
 export default {
   name: 'DataServices',
@@ -38,6 +35,14 @@ export default {
       required: true
     }
   },
+  methods: {
+    getImageUrl(imagePath) {
+      if (imagePath) {
+        return `http://localhost:5500${imagePath}`;
+      }
+      return null;
+    }
+  }
 };
 </script>
 

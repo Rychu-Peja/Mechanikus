@@ -1,9 +1,8 @@
 <template>
   <div>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
-        <router-link class="navbar-brand" icon="pi pi-check" to="/">Mechanikus</router-link>
+        <router-link class="navbar-brand" to="/">Mechanikus</router-link>
         <button
           class="navbar-toggler"
           type="button"
@@ -26,9 +25,7 @@
               <router-link class="nav-link" to="/services">Warsztaty</router-link>
             </li>
           </ul>
-          <!-- Powitanie użytkownika -->
           <span class="navbar-text ms-auto me-3">Witaj, {{ userName || 'Gościu' }}</span>
-          <!-- Pole wyszukiwania -->
           <IconField iconPosition="left">
             <InputIcon class="pi pi-search" style="color:blue"></InputIcon>
             <InputText v-model="searchQuery" @input="filterServices" placeholder="Wyszukaj usługi" />
@@ -58,8 +55,7 @@ import SideBar from './SideBar.vue';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import IconField from 'primevue/iconfield';
-import 'primeicons/primeicons.css'
-
+import 'primeicons/primeicons.css';
 
 export default {
   name: 'HomePage',
@@ -69,15 +65,15 @@ export default {
   },
   data() {
     return {
-      services: [], // Wszystkie usługi
-      filteredServices: [], // Usługi po filtrze
-      searchQuery: '', // Zapytanie wyszukiwania
-      userName: '' // Imię zalogowanego użytkownika
+      services: [],
+      filteredServices: [],
+      searchQuery: '',
+      userName: ''
     };
   },
   async mounted() {
     await this.fetchServices();
-    await this.fetchLoggedInUser(); // Pobierz dane użytkownika podczas montowania komponentu
+    await this.fetchLoggedInUser();
   },
   methods: {
     async fetchServices() {
@@ -87,43 +83,28 @@ export default {
           headers: { Authorization: `Bearer ${token}` }
         });
         this.services = response.data;
-        this.filteredServices = this.services; // Ustaw początkowe wartości
+        this.filteredServices = this.services;
       } catch (error) {
         console.error('Błąd pobierania usług:', error);
       }
     },
     async fetchLoggedInUser() {
-    try {
+      try {
         const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
         };
-        const user = JSON.parse(localStorage.getItem('user')); // Pobierz zapisanego użytkownika
+        const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
-            this.userName = user.name; // Użyj nazwy z localStorage
-            
+          this.userName = user.name;
         } else {
-            // Jeśli nie ma zapisanego użytkownika, obsłuż to odpowiednio
-            console.log('Brak zalogowanego użytkownika.');
-            this.userName = 'Gość';
+          console.log('Brak zalogowanego użytkownika.');
+          this.userName = 'Gość';
         }
-    } catch (error) {
+      } catch (error) {
         console.error('Błąd pobierania danych użytkownika:', error);
         this.userName = 'Gość';
       }
-      
     },
-    // fetchServicesByCity(city) {
-    // axios.get(`http://localhost:5500/carservicedb/services?city=${city}`)
-    //     .then(response => {
-    //         this.filteredServices = response.data;
-    //     })
-    //     .catch(error => {
-    //         console.error('Error fetching services by city:', error);
-    //         this.filteredServices = [];  // Clear services on error to avoid displaying incorrect data
-    //     });
-    //     },
-
-
     filterServices() {
       const query = this.searchQuery.toLowerCase();
       this.filteredServices = this.services.filter(service =>
@@ -131,9 +112,9 @@ export default {
       );
     },
     logout() {
-        localStorage.removeItem('loggedIn');
-        localStorage.removeItem('user');
-        this.$router.push({ name: "LoginLayout" });
+      localStorage.removeItem('loggedIn');
+      localStorage.removeItem('user');
+      this.$router.push({ name: "LoginLayout" });
     }
   }
 };
