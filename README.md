@@ -1,29 +1,65 @@
-# .
 
-This template should help get you started developing with Vue 3 in Vite.
+# Mechanikus - Car Service Management Application
 
-## Recommended IDE Setup
+Mechanikus is a web application that allows users to manage car services, make service reservations, and browse available workshops. The application is user-friendly and offers features that facilitate service management for both customers and workshop owners.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
 
-## Customize configuration
+## Features
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+- **Browse Workshops**: Users can browse a list of available car workshops with information about the services offered, location, and photos of the workshops.
+- **Service Reservations**: Users can book car services at their chosen workshop by providing details about the repair and selecting a convenient time
+- **Cancel Reservations**: Users can cancel their reservations directly from the application.
+- **Filter Workshops**: The application allows filtering workshops based on location and services offered, such as tire repair, engine repair, electrical work, etc.
+- **Service Search**: A built-in search field enables users to quickly find the services they are interested in
+- **Login and Registration**: A secure login and registration system for users.
 
-## Project Setup
 
-```sh
-npm install
-```
+## Tech Stack
 
-### Compile and Hot-Reload for Development
+**Client:** Vue.js, PrimeVue, HTML, CSS, Bootstrap
 
-```sh
-npm run dev
-```
+**Server:** Node.js, Express.js, MongoDB
 
-### Compile and Minify for Production
+**Authorization**: JSON Web Tokens (JWT)
 
-```sh
-npm run build
-```
+**Image Handling**: Multer, Sharp
+
+
+
+## Installation
+
+**Backend**
+
+    1. Clone the backend repository:
+    git clone https://github.com/kubakarol/mechanik-backend
+
+    2. Install backend dependencies:
+    npm install
+
+    3. Run the backend:
+    node db.js
+    
+**Frontend**
+
+    1. Clone the frontend repository:
+    git clone https://github.com/Rychu-Peja/Mechanikus
+
+    2. Install frontend dependencies:
+    npm install
+
+    3. Run the frontend:
+    npm run dev
+
+
+
+    
+## Authors
+
+- [@Rychu-Peja](https://www.github.com/Rychu-Peja)
+- [@VirtualRaptor](https://github.com/VirtualRaptor)
+- [@kubakarol](https://github.com/kubakarol)
+
+## License
+
+This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License
+
