@@ -5,7 +5,7 @@
       <div v-for="service in services" :key="service._id" class="col mb-4">
         <Card style="width: 25rem; overflow: hidden" class="mx-auto mb-3">
           <template #header>
-            <img :src="getImageUrl(service.imagePath) || '/src/assets/warsztat.jpg'" alt="warsztat" style="max-width: 100%;" />
+            <img :src="getImageUrl(service.imagePath) || '/src/assets/warsztat.jpg'" alt="warsztat" class="service-image" />
           </template>
           <template #title>{{ service.name }}</template>
           <template #subtitle>{{ service.props.join(', ') }}</template>
@@ -56,10 +56,10 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.card-image img {
+.service-image {
   width: 100%;
-  height: auto;
-  object-fit: cover;
+  height: 200px; 
+  object-fit: cover; 
 }
 
 .btn-blue {

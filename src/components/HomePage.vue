@@ -39,7 +39,7 @@
 
     <div class="main-container">
       <div class="sidebar">
-        <SideBar @citySelected="fetchServicesByCity" />
+        <SideBar @applyFilters="applyFilters" />
       </div>
       <div class="services">
         <DataServices :services="filteredServices" />
@@ -110,6 +110,13 @@ export default {
       this.filteredServices = this.services.filter(service =>
         service.name.toLowerCase().includes(query)
       );
+    },
+    applyFilters({ city, props }) {
+      this.filteredServices = this.services.filter(service => {
+        const matchesCity = city ? service.city === city : true;
+        const matchesProps = props.length ? props.every(prop => service.props.includes(prop)) : true;
+        return matchesCity && matchesProps;
+      });
     },
     logout() {
       localStorage.removeItem('loggedIn');

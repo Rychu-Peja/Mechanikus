@@ -92,14 +92,14 @@ export default {
   components: {
     DataTable,
     Column,
-    MultiSelect,  // Register the component
+    MultiSelect,
   },
   data() {
     return {
       services: [],
       newService: {
         name: '',
-        props: [],  // This will directly bind to MultiSelect
+        props: [],  
         description: '',
         city: '',
         imageFile: null
@@ -110,8 +110,10 @@ export default {
         { name: 'Silnik', code: 'Silnik' },
         { name: 'Lakier', code: 'Lakier' },
         { name: 'Elektryka', code: 'Elektryka' },
+        { name: 'Hamulce', code: 'Hamulce' },
         { name: 'Klimatyzacja', code: 'Klimatyzacja' },
-        { name: 'Wymiana płynów', code: 'Inne' },
+        { name: 'Wymiana płynów', code: 'Płyny' },
+        { name: 'Inne', code: 'Inne' },
       ]
     };
   },

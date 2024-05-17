@@ -8,8 +8,8 @@
       </div>
     </div>
     <h2 class="sidebar-title" style="margin-top: 30px;">Miasto</h2>
-    <Dropdown v-model="selectedCity" :options="cities" showClear optionLabel="name" placeholder="Wybierz miasto" :highlightOnSelect="false" style="width: 11rem;" @change="cityChanged" />
-    <Button style="margin-top: 2rem;  width: 11rem;" class="btn btn-blue" label="Filtruj" @click="applyFilters" />
+    <Dropdown v-model="selectedCity" :options="cities" showClear optionLabel="name" placeholder="Wybierz miasto" :highlightOnSelect="false" style="width: 11rem;" />
+    <Button style="margin-top: 2rem; width: 11rem;" class="btn btn-blue" label="Filtruj" @click="applyFilters" />
   </div>
 </template>
 
@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       checkedOptions: [],
-      options: ['Opony', 'Silnik', 'Elektryka', 'Inne'],
+      options: ['Opony', 'Silnik', 'Elektryka', 'Szyby', 'Klimatyzacja','Hamulce', 'Płyny', 'Lakier', 'Inne'],
       cities: [],
       selectedCity: null
     };
@@ -42,9 +42,9 @@ export default {
         })
         .catch(error => console.error('Error fetching cities:', error));
     },
-    cityChanged(city) {
-      this.$emit('citySelected', city.code);
-    },
+    applyFilters() {
+      this.$emit('applyFilters', { city: this.selectedCity ? this.selectedCity.name : '', props: this.checkedOptions });
+    }
   },
   mounted() {
     this.fetchCities();
