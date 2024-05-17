@@ -48,6 +48,7 @@
             <h3>Serwis: {{ reservation.serviceName }}</h3>
             <h4>Data: {{ formatReservationDate(reservation.reservationDate) }}</h4>
             <h4>Zgłoszenie: {{ reservation.reservationDetails }}</h4>
+            <button class="btn btn-danger mt-3" @click="cancelResesrvation(reservation._id)">Anuluj</button>
           </div>
         </li>
       </ul>
@@ -83,10 +84,40 @@ export default {
     formatReservationDate(date) {
       const d = new Date(date);
       return `${d.getFullYear()}-${('0' + (d.getMonth() + 1)).slice(-2)}-${('0' + d.getDate()).slice(-2)} ${('0' + d.getHours()).slice(-2)}:${('0' + d.getMinutes()).slice(-2)}`;
-    }
+    },
+    async cancelResesrvation(reservationId){
+      try{
+        const response = await axios.delete(`http://localhost:5500/carservicedb/cancelReservation/${reservationId}`)
+        if(response.status ===200){
+          this.reservations = this.reservations.filter(reservation => reservation._id !== reservationId) 
+          this.fetchReservations()
+        }
+      }
+      catch(error){
+        console.error('Błąd anulowania rezerwacji:', error);
+      }
+    },
+    async fetchLoggedInUser() {
+      try {
+        const config = {
+          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+        };
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+          this.userName = user.name;
+        } else {
+          console.log('Brak zalogowanego użytkownika.');
+          this.userName = 'Gość';
+        }
+      } catch (error) {
+        console.error('Błąd pobierania danych użytkownika:', error);
+        this.userName = 'Gość';
+      }
+    },
   },
   mounted() {
     this.fetchReservations();
+    this.fetchLoggedInUser();
   }
 };
 </script>
