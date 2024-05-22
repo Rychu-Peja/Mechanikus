@@ -20,11 +20,11 @@
               <router-link class="nav-link" to="/reservations">Rezerwacje</router-link>
             </li>
           </ul>
-          <ul class="navbar-nav">
+          <!-- <ul class="navbar-nav">
             <li class="nav-item">
               <router-link class="nav-link" to="/services">Warsztaty</router-link>
             </li>
-          </ul>
+          </ul> -->
           <span class="navbar-text ms-auto me-3">Witaj, {{ userName || 'Gościu' }}</span>
           <IconField iconPosition="left">
             <InputIcon class="pi pi-search" style="color:blue"></InputIcon>
