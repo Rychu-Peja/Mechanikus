@@ -8,8 +8,11 @@
             <img :src="getImageUrl(service.imagePath) || '/src/assets/warsztat.jpg'" alt="warsztat" class="service-image" />
           </template>
           <template #title>{{ service.name }}</template>
-          <template #subtitle>{{ service.props.join(', ') }}</template>
+          <template #subtitle>{{ service.props.join(', ') }}
+            <p>{{ service.city }}</p>
+          </template>
           <template #content>
+            
             <p>{{ service.description }}</p>
           </template>
           <template #footer>

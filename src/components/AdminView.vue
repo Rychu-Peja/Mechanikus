@@ -1,46 +1,48 @@
 <template>
     <div>
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-          <router-link class="navbar-brand" icon="pi pi-check" to="/">Mechanikus</router-link>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <router-link class="nav-link" to="/reservations">Rezerwacje</router-link>
-              </li>
-              <li class="nav-item">
-                <router-link class="nav-link" to="/services">Warsztaty</router-link>
-              </li>
-            </ul>
-            <!-- Powitanie użytkownika -->
-            <span class="navbar-text ms-auto me-3">Witaj, {{ userName || 'Gościu' }}</span>
-            <!-- Pole wyszukiwania -->
-            <IconField iconPosition="left">
-              <InputIcon class="pi pi-search" style="color:blue"></InputIcon>
-              <InputText v-model="searchQuery" @input="filterServices" placeholder="Wyszukaj usługi" />
-            </IconField>
-          </div>
-          <div class="ps-3">
-            <Button @click="logout" class="btn btn-danger" label="Wyloguj" />
-          </div>
+       <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <router-link class="navbar-brand" icon="pi pi-check" to="isAdmin ? '/admin' : '/'">Mechanikus</router-link>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <router-link class="nav-link" to="/reservations">Rezerwacje</router-link>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <router-link class="nav-link" to="/services">Warsztaty</router-link>
+            </li>
+          </ul>
+          <!-- Powitanie użytkownika -->
+          <span class="navbar-text ms-auto me-3">Witaj, {{ userName || 'Gościu' }}</span>
+          <!-- Pole wyszukiwania -->
+          <IconField iconPosition="left">
+            <InputIcon class="pi pi-search" style="color:blue"></InputIcon>
+            <InputText v-model="searchQuery" @input="filterServices" placeholder="Wyszukaj usługi" />
+          </IconField>
         </div>
-      </nav>
+        <div class="ps-3">
+          <Button @click="logout" class="btn btn-danger" label="Wyloguj" />
+        </div>
+      </div>
+    </nav>
   
       <div class="main-container">
         <div class="sidebar">
-          <SideBar />
+          <SideBar @applyFilters="applyFilters" />
         </div>
         <div class="services">
           <DataServices :services="filteredServices" />
@@ -70,7 +72,8 @@
         services: [], // Wszystkie usługi
         filteredServices: [], // Usługi po filtrze
         searchQuery: '', // Zapytanie wyszukiwania
-        userName: '' // Imię zalogowanego użytkownika
+        userName: '', // Imię zalogowanego użytkownika
+        isAdmin: false,
       };
     },
     async mounted() {
@@ -92,24 +95,29 @@
       },
       async fetchLoggedInUser() {
       try {
-          const config = {
+        const config = {
           headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
-          };
-          const user = JSON.parse(localStorage.getItem('user')); // Pobierz zapisanego użytkownika
-          if (user) {
-              this.userName = user.name; // Użyj nazwy z localStorage
-              
-          } else {
-              // Jeśli nie ma zapisanego użytkownika, obsłuż to odpowiednio
-              console.log('Brak zalogowanego użytkownika.');
-              this.userName = 'Gość';
-          }
-      } catch (error) {
-          console.error('Błąd pobierania danych użytkownika:', error);
+        };
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+          this.userName = user.name;
+          this.isAdmin = user.__v || user.type === 1;
+        } else {
+          console.log('Brak zalogowanego użytkownika.');
           this.userName = 'Gość';
+        }
+      } catch (error) {
+        console.error('Błąd pobierania danych użytkownika:', error);
+        this.userName = 'Gość';
       }
-  },
-  
+    },
+    applyFilters({ city, props }) {
+      this.filteredServices = this.services.filter(service => {
+        const matchesCity = city ? service.city === city : true;
+        const matchesProps = props.length ? props.every(prop => service.props.includes(prop)) : true;
+        return matchesCity && matchesProps;
+      });
+    },
       filterServices() {
         const query = this.searchQuery.toLowerCase();
         this.filteredServices = this.services.filter(service =>

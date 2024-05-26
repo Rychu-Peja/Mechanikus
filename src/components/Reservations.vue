@@ -3,7 +3,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
-        <router-link class="navbar-brand" icon="pi pi-check" to="/">Mechanikus</router-link>
+        <router-link class="navbar-brand" icon="pi pi-check" :to="isAdmin ? '/admin' : '/'">Mechanikus</router-link>
         <button
           class="navbar-toggler"
           type="button"
@@ -22,7 +22,7 @@
             </li>
           </ul>
           <ul class="navbar-nav">
-            <li class="nav-item">
+            <li class="nav-item" v-if="isAdmin">
               <router-link class="nav-link" to="/services">Warsztaty</router-link>
             </li>
           </ul>
@@ -41,14 +41,16 @@
     </nav>
 
     <div class="container" style="margin-top: 15px;">
-      <h2>Twoje rezerwacje</h2>
+      <h2 class="mb-4 text-center">Twoje rezerwacje</h2>
       <ul class="list-group">
-        <li v-for="reservation in reservations" :key="reservation._id" class="list-group-item">
-          <div class="card-body">
-            <h3>Serwis: {{ reservation.serviceName }}</h3>
-            <h4>Data: {{ formatReservationDate(reservation.reservationDate) }}</h4>
-            <h4>Zgłoszenie: {{ reservation.reservationDetails }}</h4>
-            <button class="btn btn-danger mt-3" @click="cancelResesrvation(reservation._id)">Anuluj</button>
+        <li v-for="reservation in reservations" :key="reservation._id" class="list-group-item mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">Serwis: {{ reservation.serviceName }}</h3>
+              <h4 class="card-subtitle mb-2 text-muted">Data: {{ formatReservationDate(reservation.reservationDate) }}</h4>
+              <p class="card-text">Zgłoszenie: {{ reservation.reservationDetails }}</p>
+              <button class="btn btn-danger mt-3" @click="cancelResesrvation(reservation._id)">Anuluj</button>
+            </div>
           </div>
         </li>
       </ul>
@@ -105,6 +107,7 @@ export default {
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
           this.userName = user.name;
+          this.isAdmin = user.type === 1 || user.__v === 1;
         } else {
           console.log('Brak zalogowanego użytkownika.');
           this.userName = 'Gość';

@@ -41,7 +41,7 @@
   </div>
 
   <div class="container">
-    <Button @click="goHome" class="btn btn-return" label="Wróć" />
+    <Button @click="goHome" class="btn btn-return mb-3" label="Wróć" />
     <div v-if="service">
       <div class="card mb-3">
         <div class="card-body row">
@@ -51,19 +51,21 @@
             <p class="card-text">{{ service.description }}</p>
             <h4 class="card-subtitle mb-2 text-muted">Czym się zajmujemy?</h4>
             <p class="card-text">{{ service.props.join(', ') }}</p>
-          </div>
-          <div style="margin-top: 8rem;">
-            <h4 class="card-subtitle mb-2 text-muted">Dodatkowe informacje dla warsztatu</h4>
-            <FloatLabel style="margin-top: 25px;">
-              <Textarea v-model="reservationDetails" rows="5" cols="30"> </Textarea>
-              <label>Informacje do rezerwacji </label>
-            </FloatLabel>
+            <h4 class="card-subtitle mb-2 text-muted">Gdzie się znajdujemy? </h4>
+            <p class="card-text">{{service.city}}</p>
+            <div class="mt-4">
+              <h4 class="card-subtitle mb-3 text-muted">Treść zgłoszenia</h4>
+              <FloatLabel class="mt-4">
+                <Textarea v-model="reservationDetails" rows="5" cols="30"></Textarea>
+                <label>Informacje do rezerwacji</label>
+              </FloatLabel>
+            </div>
           </div>
           <div class="col-md-4">
-            <div class="d-flex flex-column justify-content-between h-100 pt-2" style="margin-top: 15px;">
+            <div class="d-flex flex-column justify-content-start h-100">
               <h4>Umów się na wizytę</h4>
-              <v-date-picker v-model="reservationDate" mode="dateTime" class="w-100" />
-              <button @click="makeReservation" class="btn btn-blue mt-3 w-100">Wyślij rezerwację</button>
+              <v-date-picker v-model="reservationDate" mode="dateTime" class="w-100 mb-3" />
+              <button @click="makeReservation" class="btn btn-blue w-100">Wyślij rezerwację</button>
             </div>
           </div>
         </div>
@@ -74,6 +76,8 @@
 
 <script>
 import axios from 'axios';
+import Button from 'primevue/button';
+import FloatLabel from 'primevue/floatlabel';
 import Textarea from 'primevue/textarea';
 
 export default {
@@ -86,11 +90,18 @@ export default {
       userId: '',
       userName: '',
       userLastname: '',
+      userType: 0, 
+      userVersion: 0, 
     };
+  },
+  components: {
+    Button,
+    FloatLabel,
+    Textarea,
   },
   async mounted() {
     await this.fetchServiceDetails();
-    await this.fetchLoggedInUser(); // Pobierz dane użytkownika po załadowaniu komponentu
+    await this.fetchLoggedInUser(); 
   },
   methods: {
     async fetchServiceDetails() {
@@ -105,39 +116,44 @@ export default {
       }
     },
     async fetchLoggedInUser() {
-  const authToken = localStorage.getItem('authToken');
-  if (!authToken) {
-    console.error("Brak dostępnego tokenu autoryzacyjnego.");
-    return;
-  }
-  const response = await axios.get('http://localhost:5500/carservicedb/currentUser', {
-    headers: { Authorization: `Bearer ${authToken}` }
-  });
-  this.userId = response.data._id;
-  this.userName = response.data.name;
-  this.userLastname = response.data.lastname;
-},
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+        console.error("Brak dostępnego tokenu autoryzacyjnego.");
+        return;
+      }
+      const response = await axios.get('http://localhost:5500/carservicedb/currentUser', {
+        headers: { Authorization: `Bearer ${authToken}` }
+      });
+      this.userId = response.data._id;
+      this.userName = response.data.name;
+      this.userLastname = response.data.lastname;
+      this.userType = response.data.type; 
+      this.userVersion = response.data.__v;
+    },
+    async makeReservation() {
+      try {
+        const reservationData = {
+          userId: this.userId,
+          userName: this.userName,
+          userLastname: this.userLastname,
+          serviceName: this.service.name,
+          reservationDate: this.reservationDate,
+          reservationDetails: this.reservationDetails,
+        };
+        const authToken = localStorage.getItem('authToken');
+        const response = await axios.post('http://localhost:5500/carservicedb/reservations', reservationData, {
+          headers: { Authorization: `Bearer ${authToken}` }
+        });
+        console.log('Rezerwacja udana:', response.data);
 
-async makeReservation() {
-  try {
-    const reservationData = {
-      userId: this.userId,
-      userName: this.userName,
-      userLastname: this.userLastname,
-      serviceName: this.service.name,
-      reservationDate: this.reservationDate,
-      reservationDetails: this.reservationDetails,
-    };
-    const authToken = localStorage.getItem('authToken');
-    const response = await axios.post('http://localhost:5500/carservicedb/reservations', reservationData, {
-      headers: { Authorization: `Bearer ${authToken}` }
-    });
-    console.log('Rezerwacja udana:', response.data);
-    this.$router.push({ name: 'Reservations' });
-  } catch (error) {
-    console.error('Błąd podczas rezerwacji:', error);
-  }
-  this.goHome();
+        if (this.userType === 1 || this.userVersion === 1) {
+          this.$router.push({ name: 'AdminView' });
+        } else {
+          this.$router.push({ name: 'HomePage' });
+        }
+      } catch (error) {
+        console.error('Błąd podczas rezerwacji:', error);
+      }
     },
     goHome() {
       this.$router.push({ name: 'HomePage' });
@@ -145,7 +161,6 @@ async makeReservation() {
   }
 };
 </script>
-
 
 <style scoped>
 .container {
@@ -175,5 +190,15 @@ async makeReservation() {
 
 .card-title {
   margin-bottom: 45px;
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
 }
 </style>

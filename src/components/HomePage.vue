@@ -2,7 +2,7 @@
   <div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
-        <router-link class="navbar-brand" to="/">Mechanikus</router-link>
+        <router-link class="navbar-brand" :to="isAdmin ? '/admin' : '/'">Mechanikus</router-link>
         <button
           class="navbar-toggler"
           type="button"
@@ -68,7 +68,8 @@ export default {
       services: [],
       filteredServices: [],
       searchQuery: '',
-      userName: ''
+      userName: '',
+      isAdmin: false,
     };
   },
   async mounted() {
@@ -96,6 +97,7 @@ export default {
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
           this.userName = user.name;
+          this.isAdmin = user.__v || user.type === 1;
         } else {
           console.log('Brak zalogowanego użytkownika.');
           this.userName = 'Gość';

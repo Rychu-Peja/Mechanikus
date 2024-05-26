@@ -43,7 +43,7 @@ export default {
       email: this.email,
       password: this.password
     });
-    console.log('response', response);  // This helps in debugging the response
+    console.log('response', response);  
     if (response.data.user) {
       console.log("Login successful!", response.data.user);
       localStorage.setItem('loggedIn', true);
@@ -51,14 +51,13 @@ export default {
       localStorage.setItem('userId', response.data.user._id);
       localStorage.setItem('userName', response.data.user.name);
       localStorage.setItem('userLastname', response.data.user.lastname);
-      localStorage.setItem('authToken', response.data.token); // Remember to store the token
-      this.determineRedirect(response.data.user.type || response.data.user.__v);  // Correct usage of user type or __v for redirection
-
+      localStorage.setItem('authToken', response.data.token); 
+      this.determineRedirect(response.data.user.type || response.data.user.__v);  
     } else {
       this.error = "Nieprawidłowy email lub hasło.";
     }
     if (response.data.token) {
-      localStorage.setItem('authToken', response.data.token); // Store token if available
+      localStorage.setItem('authToken', response.data.token); 
     }
   } catch (error) {
     console.error("Login error:", error);

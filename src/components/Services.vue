@@ -3,7 +3,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
-        <router-link class="navbar-brand" to="/">Mechanikus</router-link>
+        <router-link class="navbar-brand" icon="pi pi-check" to="/admin">Mechanikus</router-link>
         <button
           class="navbar-toggler"
           type="button"
@@ -20,13 +20,22 @@
             <li class="nav-item">
               <router-link class="nav-link" to="/reservations">Rezerwacje</router-link>
             </li>
+          </ul>
+          <ul class="navbar-nav">
             <li class="nav-item">
               <router-link class="nav-link" to="/services">Warsztaty</router-link>
             </li>
           </ul>
+          <!-- Powitanie użytkownika -->
+          <span class="navbar-text ms-auto me-3">Witaj, {{ userName || 'Gościu' }}</span>
+          <!-- Pole wyszukiwania -->
+          <IconField iconPosition="left">
+            <InputIcon class="pi pi-search" style="color:blue"></InputIcon>
+            <InputText v-model="searchQuery" @input="filterServices" placeholder="Wyszukaj usługi" />
+          </IconField>
         </div>
         <div class="ps-3">
-          <button @click="logout" class="btn btn-danger">Wyloguj</button>
+          <Button @click="logout" class="btn btn-danger" label="Wyloguj" />
         </div>
       </div>
     </nav>
@@ -180,6 +189,23 @@ export default {
         console.error('Error deleting service:', error);
       }
     },
+    async fetchLoggedInUser() {
+      try {
+        const config = {
+          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+        };
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+          this.userName = user.name;
+        } else {
+          console.log('Brak zalogowanego użytkownika.');
+          this.userName = 'Gość';
+        }
+      } catch (error) {
+        console.error('Błąd pobierania danych użytkownika:', error);
+        this.userName = 'Gość';
+      }
+    },
 
     logout() {
       localStorage.removeItem('loggedIn');
@@ -188,6 +214,7 @@ export default {
   },
   mounted() {
     this.fetchServices();
+    this.fetchLoggedInUser();
   }
 };
 </script>
